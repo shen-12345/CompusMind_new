@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: compusmind-db
+    environment:
+      POSTGRES_USER: compusmind
+      POSTGRES_PASSWORD: compusmind_dev
+      POSTGRES_DB: compusmind
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:

@@ -1,0 +1,34 @@
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# 环境变量
+.env
+
+# 上传文件
+backend/uploads/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 构建产物
+frontend/dist/
+backend/build/
+
+# 测试PDF
+backend/test_policy*.pdf
+backend/user_test*.pdf
+backend/new_test*.pdf
+backend/scholarship.pdf

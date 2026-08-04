@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校事通 — 阶段1详细实施计划</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f7fb; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1e293b; padding: 40px 20px; line-height: 1.7; }
+        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 50px 60px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        h1 { font-size: 28px; font-weight: 700; border-bottom: 3px solid #2563eb; padding-bottom: 12px; margin-bottom: 8px; color: #0a1e3c; }
+        .subtitle { display: flex; gap: 30px; font-size: 14px; color: #64748b; margin-bottom: 32px; flex-wrap: wrap; }
+        .subtitle span { background: #f1f5f9; padding: 2px 14px; border-radius: 20px; }
+        h2 { font-size: 22px; font-weight: 600; margin-top: 40px; margin-bottom: 16px; color: #0a1e3c; padding-left: 14px; border-left: 4px solid #2563eb; }
+        h3 { font-size: 18px; font-weight: 600; margin-top: 28px; margin-bottom: 12px; color: #1e293b; }
+        h4 { font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 8px; color: #334155; }
+        p { margin-bottom: 14px; color: #334155; }
+        ul, ol { margin: 10px 0 16px 24px; color: #334155; }
+        li { margin-bottom: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        th { background: #f1f5f9; font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #eef2f6; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        .highlight-box { background: #f8fafc; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 6px; margin: 16px 0; }
+        .highlight-box.warning { border-left-color: #f59e0b; background: #fffbeb; }
+        .highlight-box.success { border-left-color: #10b981; background: #ecfdf5; }
+        .highlight-box.info { border-left-color: #06b6d4; background: #ecfeff; }
+        .highlight-box.danger { border-left-color: #ef4444; background: #fef2f2; }
+        code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #0f172a; font-family: "SF Mono","Fira Code",monospace; }
+        pre { background: #0f172a; color: #e2e8f0; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; font-family: "SF Mono","Fira Code",monospace; margin: 12px 0 20px; }
+        .flow-chart { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 24px; font-family: "SF Mono","Fira Code",monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; margin: 16px 0 24px; white-space: pre-wrap; word-break: break-word; color: #0f172a; }
+        .tag { display: inline-block; background: #e0e7ff; color: #3730a3; font-size: 12px; padding: 1px 10px; border-radius: 12px; margin: 0 4px; }
+        .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+        .card-title { font-weight: 600; font-size: 15px; color: #0a1e3c; margin-bottom: 8px; }
+        .footer-note { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #94a3b8; text-align: center; }
+        @media (max-width: 768px) { .container { padding: 20px 16px; } table { font-size: 13px; } th, td { padding: 6px 10px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>阶段 1 详细实施计划</h1>
+    <div class="subtitle">
+        <span>📋 用户认证与权限系统</span>
+        <span>⏱ 第 2 周 · 5 个工作日</span>
+        <span>🏷️ 技术栈：FastAPI + Vue 3 + PostgreSQL</span>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 阶段概述 -->
+    <!-- ================================================================ -->
+    <h2>一、阶段概述</h2>
+
+    <h3>1.1 目标</h3>
+    <p>完成校事通的用户认证体系和权限控制系统，确保三种角色（学生、辅导员、校级管理员）加上超级管理员可以正常登录、权限隔离正确，为后续所有功能模块奠定基础。</p>
+
+    <h3>1.2 交付物清单</h3>
+    <table>
+        <thead><tr><th>序号</th><th>交付物</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>D1.1</td><td>users 表 + audit_logs 表</td><td>PostgreSQL 建表脚本</td></tr>
+            <tr><td>D1.2</td><td>登录/登出 API</td><td>JWT 认证，含刷新机制</td></tr>
+            <tr><td>D1.3</td><td>RBAC 权限中间件</td><td>角色+权限校验，支持装饰器/依赖注入</td></tr>
+            <tr><td>D1.4</td><td>用户管理 API（CRUD）</td><td>超级管理员管理所有用户</td></tr>
+            <tr><td>D1.5</td><td>学生批量导入功能</td><td>Excel 解析 + 批量入库</td></tr>
+            <tr><td>D1.6</td><td>审计日志框架</td><td>自动记录关键操作</td></tr>
+            <tr><td>D1.7</td><td>登录页面</td><td>Vue 3 + Element Plus</td></tr>
+            <tr><td>D1.8</td><td>首次密码修改页面</td><td>强制修改 + 密码强度校验</td></tr>
+            <tr><td>D1.9</td><td>用户管理页面</td><td>超级管理员：创建/搜索/禁用用户</td></tr>
+            <tr><td>D1.10</td><td>批量导入页面</td><td>上传 Excel + 预览 + 确认导入</td></tr>
+            <tr><td>D1.11</td><td>审计日志查看页面</td><td>按时间/操作人/操作类型筛选</td></tr>
+            <tr><td>D1.12</td><td>主布局框架</td><td>侧边栏导航（按角色动态展示）</td></tr>
+        </tbody>
+    </table>
+
+    <h3>1.3 时间安排</h3>
+    <table>
+        <thead><tr><th>天</th><th>后端任务</th><th>前端任务</th><th>里程碑</th></tr></thead>
+        <tbody>
+            <tr><td><strong>第 1 天</strong></td><td>数据库建表 + 项目骨架 + 密码加密工具</td><td>Vue 项目搭建 + 路由配置 + 登录页 UI</td><td>前后端项目可运行</td></tr>
+            <tr><td><strong>第 2 天</strong></td><td>登录/登出 API + JWT 签发 + RBAC 中间件</td><td>登录页对接 API + Token 存储 + 路由守卫</td><td>可登录/登出</td></tr>
+            <tr><td><strong>第 3 天</strong></td><td>用户管理 API（CRUD）+ 批量导入 API + 审计日志框架</td><td>用户管理页 + 批量导入页 UI</td><td>用户管理可用</td></tr>
+            <tr><td><strong>第 4 天</strong></td><td>密码修改 API + 账号锁定逻辑 + 权限种子数据</td><td>密码修改页 + 主布局 + 动态菜单</td><td>权限体系完整</td></tr>
+            <tr><td><strong>第 5 天</strong></td><td>审计日志查看 API + 边界加固 + 单元测试</td><td>审计日志页 + 联调修复 + 自测</td><td>✅ 阶段 1 完成</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 数据库设计 -->
+    <!-- ================================================================ -->
+    <h2>二、数据库设计</h2>
+
+    <h3>2.1 users 表</h3>
+    <table>
+        <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>user_id</td><td>SERIAL</td><td>PRIMARY KEY</td><td>用户 ID</td></tr>
+            <tr><td>username</td><td>VARCHAR(50)</td><td>UNIQUE NOT NULL</td><td>登录用户名（学号/工号）</td></tr>
+            <tr><td>password_hash</td><td>VARCHAR(255)</td><td>NOT NULL</td><td>bcrypt 哈希值</td></tr>
+            <tr><td>name</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>真实姓名</td></tr>
+            <tr><td>role</td><td>VARCHAR(20)</td><td>NOT NULL</td><td><code>super_admin</code> / <code>admin</code> / <code>teacher</code> / <code>student</code></td></tr>
+            <tr><td>department</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>所属学院</td></tr>
+            <tr><td>education_level</td><td>VARCHAR(10)</td><td>DEFAULT NULL</td><td>学历层级（学生专用）</td></tr>
+            <tr><td>grade</td><td>VARCHAR(10)</td><td>DEFAULT NULL</td><td>入学年份，如"2024"（学生专用）</td></tr>
+            <tr><td>admin_scope</td><td>VARCHAR(100)</td><td>DEFAULT NULL</td><td>校级管理员管辖范围（如"学生奖励"）</td></tr>
+            <tr><td>school_id</td><td>VARCHAR(20)</td><td>DEFAULT NULL</td><td>学号/工号</td></tr>
+            <tr><td>email</td><td>VARCHAR(100)</td><td>DEFAULT NULL</td><td>邮箱（用于邮件通知）</td></tr>
+            <tr><td>is_active</td><td>BOOLEAN</td><td>DEFAULT TRUE</td><td>账号是否启用</td></tr>
+            <tr><td>is_first_login</td><td>BOOLEAN</td><td>DEFAULT TRUE</td><td>是否首次登录</td></tr>
+            <tr><td>login_attempts</td><td>INT</td><td>DEFAULT 0</td><td>连续登录失败次数</td></tr>
+            <tr><td>locked_until</td><td>TIMESTAMPTZ</td><td>DEFAULT NULL</td><td>锁定截止时间</td></tr>
+            <tr><td>last_login</td><td>TIMESTAMPTZ</td><td>DEFAULT NULL</td><td>最后登录时间</td></tr>
+            <tr><td>delegate_to</td><td>INT</td><td>DEFAULT NULL FK</td><td>辅导员委托的替代人 user_id</td></tr>
+            <tr><td>delegate_until</td><td>TIMESTAMPTZ</td><td>DEFAULT NULL</td><td>委托截止时间</td></tr>
+            <tr><td>created_at</td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>创建时间</td></tr>
+            <tr><td>updated_at</td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>更新时间</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box info">
+        <strong>📌 索引</strong>：<code>username</code> 唯一索引 | <code>role</code> 普通索引 | <code>department</code> 普通索引<br>
+        <strong>📌 注意</strong>：<code>delegate_to</code> 和 <code>delegate_until</code> 字段在本阶段先建好，委托功能在阶段 6 实现
+    </div>
+
+    <h3>2.2 audit_logs 表</h3>
+    <table>
+        <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>log_id</td><td>SERIAL</td><td>PRIMARY KEY</td><td>日志 ID</td></tr>
+            <tr><td>operator_id</td><td>INT</td><td>NOT NULL FK</td><td>操作人 user_id</td></tr>
+            <tr><td>operator_name</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>操作人姓名（冗余，防止用户被删后无法追溯）</td></tr>
+            <tr><td>action</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>操作类型，如 <code>user_login</code> / <code>user_create</code> / <code>user_disable</code></td></tr>
+            <tr><td>resource_type</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>资源类型，如 <code>users</code> / <code>policies</code> / <code>applications</code></td></tr>
+            <tr><td>resource_id</td><td>INT</td><td>DEFAULT NULL</td><td>资源 ID</td></tr>
+            <tr><td>detail</td><td>JSONB</td><td>DEFAULT NULL</td><td>操作详情（如变更前后值）</td></tr>
+            <tr><td>ip_address</td><td>VARCHAR(45)</td><td>DEFAULT NULL</td><td>操作人 IP</td></tr>
+            <tr><td>user_agent</td><td>VARCHAR(500)</td><td>DEFAULT NULL</td><td>浏览器/设备信息</td></tr>
+            <tr><td>created_at</td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td><td>操作时间</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box info">
+        <strong>📌 索引</strong>：<code>operator_id</code> 索引 | <code>action</code> 索引 | <code>created_at</code> 索引 | <code>resource_type + resource_id</code> 复合索引<br>
+        <strong>📌 保留策略</strong>：日志不可删除，至少保留 1 年，到期自动归档
+    </div>
+
+    <h3>2.3 建表 SQL 示例</h3>
+    <pre>
+-- 启用 pgvector 扩展
+CREATE EXTENSION IF NOT EXISTS vector;
+
+-- 用户表
+CREATE TABLE users (
+    user_id         SERIAL PRIMARY KEY,
+    username        VARCHAR(50) UNIQUE NOT NULL,
+    password_hash   VARCHAR(255) NOT NULL,
+    name            VARCHAR(50) NOT NULL,
+    role            VARCHAR(20) NOT NULL CHECK (role IN ('super_admin','admin','teacher','student')),
+    department      VARCHAR(100) NOT NULL,
+    education_level VARCHAR(10) DEFAULT NULL,
+    grade           VARCHAR(10) DEFAULT NULL,
+    admin_scope     VARCHAR(100) DEFAULT NULL,
+    school_id       VARCHAR(20) DEFAULT NULL,
+    email           VARCHAR(100) DEFAULT NULL,
+    is_active       BOOLEAN DEFAULT TRUE,
+    is_first_login  BOOLEAN DEFAULT TRUE,
+    login_attempts  INT DEFAULT 0,
+    locked_until    TIMESTAMPTZ DEFAULT NULL,
+    last_login      TIMESTAMPTZ DEFAULT NULL,
+    delegate_to     INT DEFAULT NULL REFERENCES users(user_id),
+    delegate_until  TIMESTAMPTZ DEFAULT NULL,
+    created_at      TIMESTAMPTZ DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_department ON users(department);
+
+-- 审计日志表
+CREATE TABLE audit_logs (
+    log_id          SERIAL PRIMARY KEY,
+    operator_id     INT NOT NULL REFERENCES users(user_id),
+    operator_name   VARCHAR(50) NOT NULL,
+    action          VARCHAR(50) NOT NULL,
+    resource_type   VARCHAR(50) NOT NULL,
+    resource_id     INT DEFAULT NULL,
+    detail          JSONB DEFAULT NULL,
+    ip_address      VARCHAR(45) DEFAULT NULL,
+    user_agent      VARCHAR(500) DEFAULT NULL,
+    created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX idx_audit_operator ON audit_logs(operator_id);
+CREATE INDEX idx_audit_action ON audit_logs(action);
+CREATE INDEX idx_audit_time ON audit_logs(created_at);
+CREATE INDEX idx_audit_resource ON audit_logs(resource_type, resource_id);
+    </pre>
+
+    <!-- ================================================================ -->
+    <!-- API 设计 -->
+    <!-- ================================================================ -->
+    <h2>三、API 设计</h2>
+
+    <h3>3.1 认证接口</h3>
+    <table>
+        <thead><tr><th>方法</th><th>路径</th><th>说明</th><th>权限</th></tr></thead>
+        <tbody>
+            <tr><td>POST</td><td><code>/api/v1/auth/login</code></td><td>用户登录</td><td>无需认证</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/auth/logout</code></td><td>用户登出</td><td>需登录</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/auth/me</code></td><td>获取当前用户信息</td><td>需登录</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/auth/change-password</code></td><td>修改密码</td><td>需登录</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/auth/refresh</code></td><td>刷新 Token</td><td>需 Refresh Token</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.1.1 登录接口详情</h4>
+    <div class="card">
+        <div class="card-title">POST /api/v1/auth/login</div>
+        <p><strong>请求体</strong>：</p>
+        <pre>{
+    "username": "2024001",      // 学号/工号
+    "password": "Abc123!@"      // 密码
+}</pre>
+        <p><strong>成功响应（200）</strong>：</p>
+        <pre>{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "access_token": "eyJhbGciOi...",
+        "refresh_token": "eyJhbGciOi...",
+        "token_type": "bearer",
+        "expires_in": 86400,
+        "user": {
+            "user_id": 1,
+            "username": "2024001",
+            "name": "张三",
+            "role": "student",
+            "department": "计算机学院",
+            "is_first_login": true
+        }
+    }
+}</pre>
+        <p><strong>异常响应</strong>：</p>
+        <pre>// 密码错误
+{"code": 1001, "message": "用户名或密码错误"}
+// 账号锁定
+{"code": 1002, "message": "账号已锁定，请15分钟后再试"}
+// 账号禁用
+{"code": 1003, "message": "账号已被禁用，请联系管理员"}
+// 首次登录
+{"code": 1004, "message": "首次登录，请修改密码", "data": {"need_change_password": true}}</pre>
+    </div>
+
+    <h3>3.2 用户管理接口（超级管理员）</h3>
+    <table>
+        <thead><tr><th>方法</th><th>路径</th><th>说明</th><th>权限</th></tr></thead>
+        <tbody>
+            <tr><td>GET</td><td><code>/api/v1/admin/users</code></td><td>用户列表（分页+搜索+筛选）</td><td>super_admin</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/admin/users</code></td><td>创建单个用户</td><td>super_admin</td></tr>
+            <tr><td>PUT</td><td><code>/api/v1/admin/users/{id}</code></td><td>更新用户信息</td><td>super_admin</td></tr>
+            <tr><td>PUT</td><td><code>/api/v1/admin/users/{id}/toggle-active</code></td><td>启用/禁用账号</td><td>super_admin</td></tr>
+            <tr><td>DELETE</td><td><code>/api/v1/admin/users/{id}</code></td><td>删除用户（软删除）</td><td>super_admin</td></tr>
+            <tr><td>POST</td><td><code>/api/v1/admin/users/import</code></td><td>批量导入学生</td><td>super_admin</td></tr>
+            <tr><td>GET</td><td><code>/api/v1/admin/users/import/template</code></td><td>下载导入模板</td><td>super_admin</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.2.1 批量导入接口详情</h4>
+    <div class="card">
+        <div class="card-title">POST /api/v1/admin/users/import</div>
+        <p><strong>请求</strong>：<code>multipart/form-data</code>，上传 Excel 文件</p>
+        <p><strong>Excel 模板格式</strong>：</p>
+        <table>
+            <thead><tr><th>username</th><th>name</th><th>role</th><th>department</th><th>education_level</th><th>grade</th><th>email</th><th>school_id</th></tr></thead>
+            <tbody>
+                <tr><td>2024001</td><td>张三</td><td>student</td><td>计算机学院</td><td>本科</td><td>2024</td><td>zhangsan@xxx.edu.cn</td><td>2024001</td></tr>
+                <tr><td>2024002</td><td>李四</td><td>student</td><td>计算机学院</td><td>本科</td><td>2024</td><td>lisi@xxx.edu.cn</td><td>2024002</td></tr>
+            </tbody>
+        </table>
+        <p><strong>导入流程</strong>：</p>
+        <ol>
+            <li>上传 Excel → 后端解析并校验数据格式</li>
+            <li>返回预览数据（前 20 条 + 总数）</li>
+            <li>用户确认后，执行批量入库</li>
+            <li>初始密码：<code>school_id + "@Abc"</code>（如 <code>2024001@Abc</code>）</li>
+            <li>返回导入结果（成功数、失败数、失败原因）</li>
+        </ol>
+        <p><strong>响应</strong>：</p>
+        <pre>{
+    "code": 0,
+    "data": {
+        "total": 500,
+        "success": 498,
+        "failures": [
+            {"row": 3, "reason": "用户名重复"},
+            {"row": 17, "reason": "学院名称不存在"}
+        ]
+    }
+}</pre>
+    </div>
+
+    <h3>3.3 审计日志接口</h3>
+    <table>
+        <thead><tr><th>方法</th><th>路径</th><th>说明</th><th>权限</th></tr></thead>
+        <tbody>
+            <tr><td>GET</td><td><code>/api/v1/admin/audit-logs</code></td><td>日志列表（分页+筛选）</td><td>super_admin</td></tr>
+        </tbody>
+    </table>
+
+    <h3>3.4 统一响应格式</h3>
+    <pre>
+// 成功
+{"code": 0, "message": "success", "data": {...}}
+
+// 业务错误
+{"code": 1xxx, "message": "具体错误信息"}
+
+// 认证错误
+{"code": 1001, "message": "用户名或密码错误"}
+{"code": 1002, "message": "Token 已过期"}
+{"code": 1003, "message": "无权限访问"}
+
+// 参数错误
+{"code": 2001, "message": "参数校验失败", "detail": {"field": "email", "msg": "邮箱格式不正确"}}
+    </pre>
+
+    <h3>3.5 JWT 设计</h3>
+    <table>
+        <thead><tr><th>参数</th><th>值</th></tr></thead>
+        <tbody>
+            <tr><td>Access Token 有效期</td><td>24 小时</td></tr>
+            <tr><td>Refresh Token 有效期</td><td>7 天</td></tr>
+            <tr><td>Token 存储位置</td><td>前端 localStorage</td></tr>
+            <tr><td>Token 传递方式</td><td>Authorization: Bearer &lt;token&gt;</td></tr>
+            <tr><td>Token 负载</td><td><code>{"user_id": 1, "role": "student", "department": "计算机学院"}</code></td></tr>
+            <tr><td>算法</td><td>HS256</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- RBAC 权限设计 -->
+    <!-- ================================================================ -->
+    <h2>四、RBAC 权限设计</h2>
+
+    <h3>4.1 角色定义</h3>
+    <table>
+        <thead><tr><th>角色</th><th>标识</th><th>描述</th></tr></thead>
+        <tbody>
+            <tr><td><strong>超级管理员</strong></td><td><code>super_admin</code></td><td>系统管理员，拥有全部权限，管理账号、配置、日志</td></tr>
+            <tr><td><strong>校级管理员</strong></td><td><code>admin</code></td><td>按项目分类审批纸质版材料，查看全校统计</td></tr>
+            <tr><td><strong>辅导员</strong></td><td><code>teacher</code></td><td>上传政策、初审电子版、终核纸质版，查看本院统计</td></tr>
+            <tr><td><strong>学生</strong></td><td><code>student</code></td><td>查看政策、智能问答、申请、收藏</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.2 权限矩阵</h3>
+    <table>
+        <thead><tr><th>功能模块</th><th>super_admin</th><th>admin</th><th>teacher</th><th>student</th></tr></thead>
+        <tbody>
+            <tr><td>用户管理</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+            <tr><td>审计日志</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+            <tr><td>系统配置</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+            <tr><td>政策上传</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>政策发布</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>电子版初审</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td></tr>
+            <tr><td>纸质版终核</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td></tr>
+            <tr><td>校级审批</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+            <tr><td>数据统计</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+            <tr><td>政策看板</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>智能问答</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>政策收藏</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+            <tr><td>申请提交</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.3 数据隔离规则</h3>
+    <table>
+        <thead><tr><th>角色</th><th>数据可见范围</th></tr></thead>
+        <tbody>
+            <tr><td>super_admin</td><td>全部数据，无限制</td></tr>
+            <tr><td>admin</td><td>仅自己管辖范围内的项目（如学生处管理员只能看到奖学金类申请）</td></tr>
+            <tr><td>teacher</td><td>仅自己学院学生的申请，仅自己发布的政策</td></tr>
+            <tr><td>student</td><td>仅自己提交的申请，仅符合自己学历+学院+年级的政策</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.4 RBAC 中间件实现方案</h3>
+    <div class="highlight-box info">
+        <strong>实现方式</strong>：FastAPI 依赖注入（Dependency Injection）<br>
+        <strong>核心逻辑</strong>：
+        <pre>
+# 角色校验装饰器
+def require_roles(roles: list[str]):
+    async def dependency(current_user = Depends(get_current_user)):
+        if current_user.role not in roles:
+            raise HTTPException(403, "无权限访问")
+        return current_user
+    return dependency
+
+# 使用示例
+@router.get("/admin/users", dependencies=[Depends(require_roles(["super_admin"]))])
+async def list_users():
+    ...
+
+@router.get("/teacher/reviews", dependencies=[Depends(require_roles(["super_admin", "teacher"]))])
+async def list_reviews(current_user = Depends(get_current_user)):
+    # current_user.department 用于数据隔离
+    ...
+        </pre>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 前端页面设计 -->
+    <!-- ================================================================ -->
+    <h2>五、前端页面设计</h2>
+
+    <h3>5.1 页面路由</h3>
+    <table>
+        <thead><tr><th>路径</th><th>页面</th><th>权限</th></tr></thead>
+        <tbody>
+            <tr><td><code>/login</code></td><td>登录页</td><td>无需认证</td></tr>
+            <tr><td><code>/change-password</code></td><td>修改密码页</td><td>需登录</td></tr>
+            <tr><td><code>/</code></td><td>首页（按角色跳转）</td><td>需登录</td></tr>
+            <tr><td><code>/admin/users</code></td><td>用户管理</td><td>super_admin</td></tr>
+            <tr><td><code>/admin/users/import</code></td><td>批量导入</td><td>super_admin</td></tr>
+            <tr><td><code>/admin/audit-logs</code></td><td>审计日志</td><td>super_admin</td></tr>
+        </tbody>
+    </table>
+
+    <h3>5.2 页面详细设计</h3>
+
+    <h4>5.2.1 登录页</h4>
+    <div class="card">
+        <div class="card-title">页面要素</div>
+        <ul>
+            <li>用户名输入框（Element Plus <code>el-input</code>）</li>
+            <li>密码输入框（<code>type="password"</code>，显示/隐藏切换）</li>
+            <li>"记住我"复选框（可选，记住用户名）</li>
+            <li>登录按钮（加载状态）</li>
+            <li>登录失败时显示错误提示（Element Plus <code>el-alert</code>）</li>
+            <li>首次登录成功后跳转到修改密码页</li>
+        </ul>
+        <p><strong>交互细节</strong>：</p>
+        <ul>
+            <li>输入框 trim 去除首尾空格</li>
+            <li>密码错误时不清空已输入的用户名</li>
+            <li>登录成功后 Token 存 localStorage，跳转到首页</li>
+            <li>登录失败 5 次后显示"账号已锁定，请 15 分钟后再试"</li>
+        </ul>
+    </div>
+
+    <h4>5.2.2 修改密码页</h4>
+    <div class="card">
+        <div class="card-title">页面要素</div>
+        <ul>
+            <li>当前密码输入框</li>
+            <li>新密码输入框（含密码强度指示器）</li>
+            <li>确认新密码输入框</li>
+            <li>提交按钮</li>
+        </ul>
+        <p><strong>密码强度规则</strong>：</p>
+        <ul>
+            <li>至少 8 位</li>
+            <li>至少 1 个大写字母</li>
+            <li>至少 1 个小写字母</li>
+            <li>至少 1 个数字</li>
+            <li>至少 1 个特殊字符（!@#$%^&*）</li>
+            <li>强度指示器：弱（仅满足长度）/ 中（满足 3 条）/ 强（满足全部）</li>
+        </ul>
+    </div>
+
+    <h4>5.2.3 用户管理页（超级管理员）</h4>
+    <div class="card">
+        <div class="card-title">页面要素</div>
+        <ul>
+            <li>顶部：搜索框（按用户名/姓名搜索）+ 角色筛选下拉 + 状态筛选 + "创建用户"按钮 + "批量导入"按钮</li>
+            <li>主体：Element Plus <code>el-table</code>，展示用户列表</li>
+            <li>表格列：用户名、姓名、角色、学院、年级、状态（启用/禁用）、最后登录时间、操作</li>
+            <li>操作列：编辑、启用/禁用、重置密码</li>
+            <li>分页：<code>el-pagination</code>，每页 20 条</li>
+        </ul>
+        <p><strong>创建用户弹窗</strong>：</p>
+        <ul>
+            <li><code>el-dialog</code> 表单：用户名、姓名、角色（下拉）、学院、学历、年级、邮箱</li>
+            <li>创建成功后自动生成初始密码，在弹窗中展示（一次性，关闭后不再展示）</li>
+        </ul>
+        <p><strong>批量导入弹窗</strong>：</p>
+        <ul>
+            <li>步骤 1：下载模板 → 上传 Excel 文件（拖拽上传）</li>
+            <li>步骤 2：预览解析结果（前 20 条 + 总数）</li>
+            <li>步骤 3：确认导入 → 展示导入结果</li>
+        </ul>
+    </div>
+
+    <h4>5.2.4 审计日志页</h4>
+    <div class="card">
+        <div class="card-title">页面要素</div>
+        <ul>
+            <li>筛选栏：时间范围选择器、操作类型下拉、操作人搜索</li>
+            <li>表格：操作时间、操作人、操作类型、资源类型、资源 ID、IP 地址、详情</li>
+            <li>详情列支持展开查看 JSON 详情</li>
+            <li>分页：每页 20 条</li>
+        </ul>
+    </div>
+
+    <h4>5.2.5 主布局</h4>
+    <div class="card">
+        <div class="card-title">布局结构</div>
+        <ul>
+            <li>左侧：侧边栏菜单（<code>el-menu</code>），按角色动态渲染</li>
+            <li>顶部：系统名称 + 用户头像下拉（个人信息、修改密码、退出登录）</li>
+            <li>主体：<code>router-view</code> 展示页面内容</li>
+            <li>右侧：通知铃铛图标（未读数量角标）</li>
+        </ul>
+        <p><strong>角色菜单</strong>：</p>
+        <pre>
+super_admin:  👥 用户管理 | 📥 批量导入 | 📋 审计日志 | ⚙️ 系统配置
+admin:         📋 待审批 | 📊 全校统计 | ⚙️ 项目管理
+teacher:       📤 上传政策 | 📋 待初审 | 📋 待终核 | 📊 数据统计
+student:       📋 信息看板 | ❤️ 我的关注 | 📝 我的申请 | 💬 智能问答
+        </pre>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 详细任务分解 -->
+    <!-- ================================================================ -->
+    <h2>六、详细任务分解</h2>
+
+    <h3>第 1 天：基础搭建</h3>
+    <table>
+        <thead><tr><th>责任人</th><th>任务</th><th>工时</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>后端</td><td>PostgreSQL 建表（users + audit_logs）</td><td>2h</td><td>建表 SQL 脚本</td></tr>
+            <tr><td>后端</td><td>FastAPI 项目骨架：目录结构、配置文件、数据库连接</td><td>3h</td><td>项目可运行，health 接口</td></tr>
+            <tr><td>后端</td><td>实现密码加密工具（bcrypt）</td><td>1h</td><td>加密/校验工具函数</td></tr>
+            <tr><td>后端</td><td>实现统一响应格式工具</td><td>1h</td><td>响应封装函数</td></tr>
+            <tr><td>前端</td><td>Vue 3 + Vite + Element Plus 项目搭建</td><td>2h</td><td>项目可运行</td></tr>
+            <tr><td>前端</td><td>配置路由（vue-router）+ 全局状态管理（Pinia）</td><td>2h</td><td>路由配置完成</td></tr>
+            <tr><td>前端</td><td>实现登录页 UI（静态）</td><td>3h</td><td>登录页组件</td></tr>
+            <tr><td>前端</td><td>封装 Axios 请求库（拦截器 + Token 注入）</td><td>2h</td><td>HTTP 请求工具</td></tr>
+        </tbody>
+    </table>
+
+    <h3>第 2 天：登录认证</h3>
+    <table>
+        <thead><tr><th>责任人</th><th>任务</th><th>工时</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>后端</td><td>实现登录 API（JWT 签发）</td><td>3h</td><td>POST /auth/login</td></tr>
+            <tr><td>后端</td><td>实现 Token 刷新 API</td><td>1h</td><td>POST /auth/refresh</td></tr>
+            <tr><td>后端</td><td>实现 RBAC 中间件（依赖注入）</td><td>3h</td><td>require_roles 装饰器</td></tr>
+            <tr><td>后端</td><td>实现获取当前用户 API</td><td>1h</td><td>GET /auth/me</td></tr>
+            <tr><td>前端</td><td>登录页对接 API</td><td>3h</td><td>登录功能可用</td></tr>
+            <tr><td>前端</td><td>实现路由守卫（未登录跳转登录页）</td><td>2h</td><td>路由守卫逻辑</td></tr>
+            <tr><td>前端</td><td>实现 Token 存储 + 自动刷新逻辑</td><td>2h</td><td>Token 管理</td></tr>
+        </tbody>
+    </table>
+
+    <h3>第 3 天：用户管理</h3>
+    <table>
+        <thead><tr><th>责任人</th><th>任务</th><th>工时</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>后端</td><td>实现用户创建 API</td><td>2h</td><td>POST /admin/users</td></tr>
+            <tr><td>后端</td><td>实现用户列表 API（分页+搜索+筛选）</td><td>2h</td><td>GET /admin/users</td></tr>
+            <tr><td>后端</td><td>实现用户更新/禁用/删除 API</td><td>2h</td><td>PUT /admin/users/{id}</td></tr>
+            <tr><td>后端</td><td>实现批量导入 API（Excel 解析）</td><td>4h</td><td>POST /admin/users/import</td></tr>
+            <tr><td>后端</td><td>实现审计日志记录框架（自动记录）</td><td>2h</td><td>审计日志装饰器</td></tr>
+            <tr><td>前端</td><td>实现用户管理页面（表格 + 搜索 + 分页）</td><td>4h</td><td>用户管理页</td></tr>
+            <tr><td>前端</td><td>实现创建用户弹窗</td><td>2h</td><td>创建用户弹窗</td></tr>
+            <tr><td>前端</td><td>实现批量导入页面（上传 + 预览 + 确认）</td><td>4h</td><td>批量导入页</td></tr>
+        </tbody>
+    </table>
+
+    <h3>第 4 天：权限体系完善</h3>
+    <table>
+        <thead><tr><th>责任人</th><th>任务</th><th>工时</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>后端</td><td>实现修改密码 API</td><td>2h</td><td>POST /auth/change-password</td></tr>
+            <tr><td>后端</td><td>实现账号锁定逻辑（5次失败锁定15分钟）</td><td>2h</td><td>锁定逻辑</td></tr>
+            <tr><td>后端</td><td>实现种子数据脚本（创建默认超级管理员）</td><td>1h</td><td>seed.py 脚本</td></tr>
+            <tr><td>后端</td><td>实现审计日志查询 API</td><td>2h</td><td>GET /admin/audit-logs</td></tr>
+            <tr><td>前端</td><td>实现修改密码页</td><td>3h</td><td>密码修改页</td></tr>
+            <tr><td>前端</td><td>实现主布局（侧边栏菜单 + 顶部导航）</td><td>4h</td><td>主布局组件</td></tr>
+            <tr><td>前端</td><td>实现动态菜单（按角色渲染）</td><td>2h</td><td>动态菜单逻辑</td></tr>
+            <tr><td>前端</td><td>实现首次登录强制跳转修改密码</td><td>1h</td><td>强制跳转逻辑</td></tr>
+        </tbody>
+    </table>
+
+    <h3>第 5 天：收尾与测试</h3>
+    <table>
+        <thead><tr><th>责任人</th><th>任务</th><th>工时</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>后端</td><td>实现审计日志查看页 API（筛选条件）</td><td>2h</td><td>完整日志查询</td></tr>
+            <tr><td>后端</td><td>编写单元测试（认证 + 用户管理）</td><td>3h</td><td>测试用例</td></tr>
+            <tr><td>后端</td><td>边界场景加固（并发登录、异常处理）</td><td>2h</td><td>边界处理</td></tr>
+            <tr><td>前端</td><td>实现审计日志查看页</td><td>3h</td><td>日志查看页</td></tr>
+            <tr><td>前端</td><td>前后端联调修复</td><td>3h</td><td>联调通过</td></tr>
+            <tr><td>前端</td><td>自测（登录流程、权限隔离、用户管理）</td><td>2h</td><td>自测通过</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 验收标准 -->
+    <!-- ================================================================ -->
+    <h2>七、验收标准</h2>
+
+    <div class="highlight-box success">
+        <strong>✅ 阶段 1 验收清单</strong>
+    </div>
+
+    <table>
+        <thead><tr><th>编号</th><th>验收项</th><th>测试方法</th></tr></thead>
+        <tbody>
+            <tr><td>A1</td><td>超级管理员可登录系统</td><td>使用 seed 脚本创建的超级管理员账号登录</td></tr>
+            <tr><td>A2</td><td>超级管理员可创建学生/辅导员/校级管理员账号</td><td>在用户管理页创建各角色账号</td></tr>
+            <tr><td>A3</td><td>超级管理员可禁用/启用账号</td><td>禁用账号后，该账号登录提示"已禁用"</td></tr>
+            <tr><td>A4</td><td>批量导入学生成功</td><td>上传含 500 条数据的 Excel，导入成功</td></tr>
+            <tr><td>A5</td><td>三种角色可正常登录</td><td>用学生/辅导员/校级管理员账号分别登录</td></tr>
+            <tr><td>A6</td><td>角色权限隔离正确</td><td>学生看到学生菜单，辅导员看到辅导员菜单，互不越权</td></tr>
+            <tr><td>A7</td><td>首次登录强制修改密码</td><td>新账号首次登录后跳转到修改密码页</td></tr>
+            <tr><td>A8</td><td>密码强度校验</td><td>输入弱密码被拒绝，提示密码规则</td></tr>
+            <tr><td>A9</td><td>登录失败 5 次锁定</td><td>连续输错 5 次密码，账号锁定 15 分钟</td></tr>
+            <tr><td>A10</td><td>Token 过期自动退出</td><td>过期 Token 请求 API 返回 401，前端跳转登录页</td></tr>
+            <tr><td>A11</td><td>审计日志记录</td><td>登录、创建用户、禁用账号等操作均在日志中可查</td></tr>
+            <tr><td>A12</td><td>审计日志查询</td><td>按时间/操作人/操作类型筛选日志</td></tr>
+            <tr><td>A13</td><td>密码加密存储</td><td>数据库中 password_hash 字段为 bcrypt 哈希值，非明文</td></tr>
+            <tr><td>A14</td><td>未登录访问拦截</td><td>未登录状态下访问 /admin/users 跳转到登录页</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 边界场景 -->
+    <!-- ================================================================ -->
+    <h2>八、本阶段边界场景</h2>
+
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>用户名不存在</td><td>提示"用户名或密码错误"，不区分具体哪个错</td></tr>
+            <tr><td>密码错误超过 5 次</td><td>锁定账号 15 分钟，锁定期间正确密码也拒绝</td></tr>
+            <tr><td>账号被禁用</td><td>提示"账号已被禁用，请联系管理员"</td></tr>
+            <tr><td>Token 过期</td><td>自动用 Refresh Token 刷新，刷新失败则跳转登录页</td></tr>
+            <tr><td>Token 被篡改</td><td>JWT 签名校验失败，清除 Token，跳转登录页</td></tr>
+            <tr><td>批量导入中部分数据格式错误</td><td>跳过错误行，继续导入其他行，返回失败详情</td></tr>
+            <tr><td>批量导入文件中用户名重复</td><td>与已有数据重复 → 跳过；与本次导入数据重复 → 取最后一条</td></tr>
+            <tr><td>批量导入文件格式不对</td><td>提示"文件格式错误，请下载模板后重试"</td></tr>
+            <tr><td>创建用户时用户名已存在</td><td>提示"用户名已存在"</td></tr>
+            <tr><td>删除自己（超级管理员删除自己的账号）</td><td>禁止删除，提示"不能删除自己的账号"</td></tr>
+            <tr><td>禁用自己</td><td>禁止禁用，提示"不能禁用自己的账号"</td></tr>
+            <tr><td>并发登录（同一账号多处登录）</td><td>允许多设备同时登录，但 Token 各自独立</td></tr>
+            <tr><td>修改密码时旧密码错误</td><td>提示"原密码错误"</td></tr>
+            <tr><td>修改密码时新密码与旧密码相同</td><td>提示"新密码不能与旧密码相同"</td></tr>
+            <tr><td>登录时用户名带空格</td><td>前端 trim 去除首尾空格</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 目录结构 -->
+    <!-- ================================================================ -->
+    <h2>九、项目目录结构（阶段 1 产出）</h2>
+
+    <pre>
+backend/
+├── app/
+│   ├── api/
+│   │   ├── __init__.py
+│   │   ├── auth.py              # 认证接口
+│   │   └── admin/
+│   │       ├── __init__.py
+│   │       ├── users.py          # 用户管理接口
+│   │       └── audit_logs.py     # 审计日志接口
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py             # 配置管理
+│   │   ├── security.py           # JWT + bcrypt
+│   │   └── deps.py               # 依赖注入（RBAC）
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── user.py               # 用户模型
+│   │   └── audit_log.py          # 审计日志模型
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── auth.py               # 认证请求/响应 Schema
+│   │   └── user.py               # 用户管理 Schema
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── auth_service.py       # 认证业务逻辑
+│   │   ├── user_service.py       # 用户管理业务逻辑
+│   │   └── audit_service.py      # 审计日志业务逻辑
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── response.py           # 统一响应格式
+│   │   └── excel_helper.py       # Excel 导入工具
+│   └── main.py                   # FastAPI 入口
+├── scripts/
+│   ├── seed.py                   # 种子数据（默认超级管理员）
+│   └── init_db.sql               # 建表脚本
+├── tests/
+│   ├── test_auth.py
+│   └── test_users.py
+├── requirements.txt
+└── .env                          # 环境变量
+
+frontend/
+├── src/
+│   ├── api/
+│   │   ├── request.ts            # Axios 封裝
+│   │   ├── auth.ts               # 认证 API
+│   │   └── admin/
+│   │       ├── users.ts          # 用户管理 API
+│   │       └── auditLogs.ts      # 审计日志 API
+│   ├── router/
+│   │   └── index.ts              # 路由配置 + 守卫
+│   ├── stores/
+│   │   └── auth.ts               # Pinia 认证状态
+│   ├── views/
+│   │   ├── login/
+│   │   │   └── LoginView.vue     # 登录页
+│   │   ├── auth/
+│   │   │   └── ChangePassword.vue # 修改密码页
+│   │   └── admin/
+│   │       ├── UsersView.vue     # 用户管理页
+│   │       ├── ImportView.vue    # 批量导入页
+│   │       └── AuditLogsView.vue # 审计日志页
+│   ├── layouts/
+│   │   └── MainLayout.vue        # 主布局
+│   ├── components/
+│   │   └── ...
+│   ├── App.vue
+│   └── main.ts
+├── vite.config.ts
+├── package.json
+└── index.html
+    </pre>
+
+    <div class="footer-note">
+        <p>阶段 1 实施计划 · 第 2 周 · 5 个工作日</p>
+        <p style="margin-top:4px; font-size:13px; color:#94a3b8;">—— 计划结束 ——</p>
+    </div>
+
+</div>
+</body>
+</html>

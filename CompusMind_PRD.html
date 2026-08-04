@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“校事通”智能政策问答平台 PRD</title>
+    <!-- 引入 Mermaid.js 用于渲染 ER 图 -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f5f7fb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #1e293b;
+            padding: 40px 20px;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+            color: #0a1e3c;
+        }
+        .subtitle {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .subtitle span {
+            background: #f1f5f9;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            color: #0a1e3c;
+            padding-left: 14px;
+            border-left: 4px solid #2563eb;
+        }
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        p {
+            margin-bottom: 14px;
+            color: #334155;
+        }
+        ul,
+        ol {
+            margin: 10px 0 16px 24px;
+            color: #334155;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 14px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef2f6;
+            vertical-align: top;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .highlight-box {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 16px 20px;
+            border-radius: 6px;
+            margin: 16px 0;
+        }
+        .highlight-box.warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .highlight-box.success {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+        }
+        code {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #0f172a;
+            font-family: "SF Mono", "Fira Code", monospace;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            font-family: "SF Mono", "Fira Code", monospace;
+            margin: 12px 0 20px;
+        }
+        .mermaid-container {
+            background: #fafbfc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px;
+            margin: 16px 0 24px;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .mermaid-container svg {
+            max-width: 100%;
+            height: auto;
+        }
+        .flow-chart {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-family: "SF Mono", "Fira Code", monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 16px 0 24px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #0f172a;
+        }
+        .toc {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px 24px;
+            margin: 24px 0 32px;
+        }
+        .toc a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .toc ul {
+            columns: 2;
+            column-gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .toc ul li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        .toc ul ul {
+            columns: 1;
+            margin-left: 18px;
+        }
+        .toc ul ul li {
+            font-size: 13px;
+            color: #475569;
+        }
+        .footer-note {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 14px;
+            color: #94a3b8;
+            text-align: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            table {
+                font-size: 13px;
+            }
+            th,
+            td {
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- 标题 -->
+        <h1>“校事通”智能政策问答平台</h1>
+        <div class="subtitle">
+            <span>📄 产品需求文档（PRD）</span>
+            <span>🏷️ 版本 V1.0</span>
+            <span>📅 2026年7月</span>
+            <span>✅ 状态：定稿</span>
+        </div>
+
+        <!-- 目录 -->
+        <div class="toc">
+            <strong style="font-size:16px;">📑 目录</strong>
+            <ul style="margin-top:8px;">
+                <li><a href="#ch1">第1章 文档说明</a></li>
+                <li><a href="#ch2">第2章 产品概述</a></li>
+                <li><a href="#ch3">第3章 功能需求详细描述</a>
+                    <ul>
+                        <li><a href="#sec3-1">3.1 用户认证模块</a></li>
+                        <li><a href="#sec3-2">3.2 辅导员端 — 文档上传与自动解析</a></li>
+                        <li><a href="#sec3-3">3.3 辅导员端 — 解析预览与发布管理</a></li>
+                        <li><a href="#sec3-4">3.4 辅导员端 — 电子版初审</a></li>
+                        <li><a href="#sec3-5">3.5 辅导员端 — 纸质版终核</a></li>
+                        <li><a href="#sec3-6">3.6 校级管理员 — 最终审批</a></li>
+                        <li><a href="#sec3-7">3.7 辅导员端 — 数据统计看板</a></li>
+                        <li><a href="#sec3-8">3.8 学生端 — 综合信息看板</a></li>
+                        <li><a href="#sec3-9">3.9 学生端 — 智能问答Agent</a></li>
+                        <li><a href="#sec3-10">3.10 学生端 — 申请进度跟踪器</a></li>
+                        <li><a href="#sec3-11">3.11 学生端 — 政策收藏</a></li>
+                    </ul>
+                </li>
+                <li><a href="#ch4">第4章 数据模型设计</a></li>
+                <li><a href="#ch5">第5章 技术选型及理由</a></li>
+                <li><a href="#ch6">第6章 完整申请审核流程总览</a></li>
+                <li><a href="#ch7">第7章 分阶段开发计划</a></li>
+                <li><a href="#ch8">第8章 非功能性需求</a></li>
+                <li><a href="#appendix">附录A：术语表</a></li>
+            </ul>
+        </div>
+
+
+        <!-- ==================== 第1章 ==================== -->
+        <h2 id="ch1">第1章 文档说明</h2>
+
+        <h3>1.1 文档目的</h3>
+        <p>本文档为“校事通”智能政策问答平台的产品需求文档（PRD），旨在为开发团队提供完整、清晰、可执行的需求说明，作为项目开发、测试和验收的依据。</p>
+
+        <h3>1.2 文档范围</h3>
+        <p>本文档覆盖“校事通”第一版（MVP）的全部功能需求、数据模型设计、技术选型及分阶段开发计划。</p>
+
+
+        <!-- ==================== 第2章 ==================== -->
+        <h2 id="ch2">第2章 产品概述</h2>
+
+        <h3>2.1 产品背景</h3>
+        <p>目前学校内部的政策信息（如奖学金申请、国际会议参会报销申请等）主要通过辅导员在年级QQ群中发送通知的方式进行传达，存在以下三大核心痛点：</p>
+        <table>
+            <thead><tr><th>序号</th><th>痛点</th><th>描述</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td><strong>信息淹没</strong></td><td>并非所有学生都需要申请每类奖学金或报销，大部分学生对无关通知选择忽略，导致真正需要申请的学生也因习惯性忽略而错过信息</td></tr>
+                <tr><td>2</td><td><strong>回溯困难</strong></td><td>通知通常提前一到两周发布，但学生往往在截止前一两天才开始准备，需要在QQ群中翻找历史聊天记录，耗时且容易遗漏</td></tr>
+                <tr><td>3</td><td><strong>版本混淆</strong></td><td>每年的申请政策文件可能有变化，学生在QQ群中搜索到的可能是已弃用的旧版文件，导致材料填写错误</td></tr>
+            </tbody>
+        </table>
+
+        <h3>2.2 产品目标</h3>
+        <p>构建一个面向高校师生的<strong>智能政策问答与多级申请协同平台</strong>，核心价值：</p>
+        <ul>
+            <li><strong>找得到</strong>：政策文档结构化归档，可检索、可追溯</li>
+            <li><strong>看得懂</strong>：清晰展示政策要点与申请进度</li>
+            <li><strong>问得清</strong>：基于RAG的智能问答，精准回答政策相关问题</li>
+            <li><strong>申得顺</strong>：全流程申请进度跟踪，辅导员初审与终核，校级管理员最终审批</li>
+        </ul>
+
+        <h3>2.3 用户角色</h3>
+        <table>
+            <thead><tr><th>角色</th><th>标识</th><th>核心职责</th></tr></thead>
+            <tbody>
+                <tr><td><strong>普通学生</strong></td><td><code>student</code></td><td>查询政策、智能提问、收藏政策、启动申请进度跟踪、上传电子材料、提交纸质版</td></tr>
+                <tr><td><strong>学院辅导员</strong></td><td><code>teacher</code></td><td>上传政策文档、预览纠错、发布政策、初审电子版材料、终核纸质版材料（核验齐全性与签章）</td></tr>
+                <tr><td><strong>校级管理员</strong></td><td><code>admin</code></td><td>按项目分类审批辅导员提交的纸质版材料（合规性审查）、发布全校级政策</td></tr>
+            </tbody>
+        </table>
+
+        <h3>2.4 产品边界</h3>
+        <p><strong>包含范围</strong>：政策文档归档与管理、学生端政策信息看板、智能问答Agent、申请进度跟踪（含电子材料上传）、辅导员初审与终核、校级管理员审批、政策收藏与状态管理</p>
+        <p><strong>明确不包含（本期不做）</strong>：</p>
+        <table>
+            <thead><tr><th>功能模块</th><th>不做的理由</th></tr></thead>
+            <tbody>
+                <tr><td>即时性紧急通知推送</td><td>QQ群已有成熟方案</td></tr>
+                <tr><td>移动端APP/小程序</td><td>首期聚焦PC端</td></tr>
+                <tr><td>跨学历导员混岗管理</td><td>现实中本科/研究生导员独立管理</td></tr>
+                <tr><td>定时发布</td><td>草稿箱手动发布可替代</td></tr>
+                <tr><td>原子规则库与自动资格预判</td><td>规则模板易膨胀且主观性强</td></tr>
+                <tr><td>电子签章/电子签名</td><td>纸质材料仍需线下提交</td></tr>
+            </tbody>
+        </table>
+
+
+        <!-- ==================== 第3章 ==================== -->
+        <h2 id="ch3">第3章 功能需求详细描述</h2>
+
+        <h3 id="sec3-1">3.1 用户认证模块</h3>
+
+        <h4>3.1.1 功能描述</h4>
+        <p>系统提供基于账号密码的登录与身份识别功能。</p>
+
+        <h4>3.1.2 功能细节</h4>
+        <table>
+            <thead><tr><th>功能点</th><th>描述</th></tr></thead>
+            <tbody>
+                <tr><td>用户登录</td><td>用户输入用户名和密码进行登录</td></tr>
+                <tr><td>身份识别</td><td>登录后系统识别用户角色（学生/辅导员/管理员），加载对应权限视图</td></tr>
+                <tr><td>密码修改</td><td>首次登录强制修改初始密码</td></tr>
+                <tr><td>会话管理</td><td>登录后保持会话状态，超时自动退出</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.1.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>用户名不存在</td><td>提示“用户名或密码错误”</td></tr>
+                <tr><td>密码错误超过5次</td><td>锁定账号15分钟</td></tr>
+                <tr><td>未登录访问需授权页面</td><td>重定向至登录页</td></tr>
+                <tr><td>会话超时（30分钟无操作）</td><td>自动退出，提示重新登录</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.1.4 异常处理</h4>
+        <table>
+            <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>数据库连接失败</td><td>提示“系统繁忙，请稍后重试”</td></tr>
+                <tr><td>密码加密失败</td><td>记录日志，提示“注册失败，请联系管理员”</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-2">3.2 辅导员端 — 文档上传与自动解析</h3>
+
+        <h4>3.2.1 功能描述</h4>
+        <p>辅导员上传政策通知文档，系统自动完成结构化字段提取和全文向量化入库。</p>
+
+        <h4>3.2.2 功能细节</h4>
+        <p><strong>上传要求</strong>：</p>
+        <table>
+            <thead><tr><th>项目</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>支持格式</td><td>PDF、Word（.docx）、扫描件PDF（自动OCR识别）</td></tr>
+                <tr><td>必填标签</td><td>适用年级（如“2023级、2024级”）</td></tr>
+                <tr><td>文件大小限制</td><td>≤ 20MB</td></tr>
+            </tbody>
+        </table>
+
+        <p><strong>系统自动解析（双轨并行）</strong>：</p>
+
+        <p><strong>轨道一：结构化字段提取</strong></p>
+        <p>调用LLM从文档中提取以下关键字段，存入元数据表：</p>
+        <table>
+            <thead><tr><th>字段</th><th>说明</th><th>是否必填</th><th>示例</th></tr></thead>
+            <tbody>
+                <tr><td>项目名称</td><td>政策/项目的正式名称</td><td>是</td><td>“2026年校长奖学金”</td></tr>
+                <tr><td>截止时间</td><td>材料提交截止日期时间</td><td>是</td><td>“2026-09-20 17:00”</td></tr>
+                <tr><td>硬性门槛</td><td>申请必须具备的条件</td><td>否</td><td>“需获得过校级一等奖学金”</td></tr>
+                <tr><td>互斥项</td><td>不可同时申请的其他项目</td><td>否</td><td>“不可与国家奖学金兼得”</td></tr>
+                <tr><td>材料清单</td><td>申请所需提交的全部材料列表</td><td>是</td><td>[“申请表”, “成绩单”, “导师推荐信”]</td></tr>
+            </tbody>
+        </table>
+        <div class="highlight-box">
+            <strong>📌 材料清单获取方式</strong>：系统由LLM自动从通知文件中提取，导员在解析预览页核对并修正，<strong>无需手动填写</strong>。
+        </div>
+
+        <p><strong>轨道二：全文向量化入库</strong></p>
+        <p>将文档全文进行文本提取、切片，调用Embedding模型生成向量，存入向量知识库。</p>
+
+        <p><strong>结构化信息提取的技术流程</strong>：</p>
+        <table>
+            <thead><tr><th>步骤</th><th>说明</th><th>工具/方法</th></tr></thead>
+            <tbody>
+                <tr><td>1. 文档解析</td><td>将PDF/Word转换为纯文本或Markdown</td><td>MinerU / Unstructured</td></tr>
+                <tr><td>2. 内容分块</td><td>按逻辑段落切分</td><td>LangChain文本分割器 / Dify内置分块</td></tr>
+                <tr><td>3. 相关性分类</td><td>判断段落是否包含目标信息</td><td>LLM（DeepSeek/通义千问）</td></tr>
+                <tr><td>4. 结构化提取</td><td>按预设JSON Schema提取关键字段</td><td>LLM + Dify参数提取器节点</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.2.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>上传文件为空或损坏</td><td>提示“文件无效，请重新上传”</td></tr>
+                <tr><td>文件格式不支持</td><td>提示“仅支持PDF和Word格式”</td></tr>
+                <tr><td>文件超过20MB</td><td>提示“文件过大，请压缩后上传”</td></tr>
+                <tr><td>LLM提取字段为空</td><td>该字段标记为“⚠️ 未识别，请手动填写”</td></tr>
+                <tr><td>LLM提取置信度 &lt; 80%</td><td>该字段橙色高亮，提示导员重点核对</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.2.4 异常处理</h4>
+        <table>
+            <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>LLM服务不可用</td><td>提示“解析服务暂时不可用，请稍后重试”，保留草稿</td></tr>
+                <tr><td>向量化服务不可用</td><td><strong>禁止发布</strong>。提示“文档解析完成，但向量化服务暂时不可用，请稍后重试或联系管理员”，保留草稿状态，等待恢复后自动重试</td></tr>
+                <tr><td>向量化入库失败</td><td><strong>整体事务回滚</strong>。元数据和向量数据均不入库，提示“系统处理失败，请稍后重试”</td></tr>
+                <tr><td>OCR识别失败</td><td>提示“文档文字识别失败，请上传文字版PDF或手动输入关键信息”</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-3">3.3 辅导员端 — 解析预览与发布管理</h3>
+
+        <h4>3.3.1 功能描述</h4>
+        <p>导员核对系统提取的结构化信息，确认无误后发布政策。</p>
+
+        <h4>3.3.2 功能细节</h4>
+        <p><strong>解析预览页展示内容</strong>：</p>
+        <ul>
+            <li>所有提取的结构化字段（项目名称、截止时间、硬性门槛、互斥项、材料清单）</li>
+            <li>低置信度字段（&lt; 80%）以橙色边框高亮</li>
+            <li>空值字段显示“⚠️ 未识别，请手动填写”</li>
+            <li>文档全文预览（供核对上下文）</li>
+        </ul>
+        <p><strong>导员可执行操作</strong>：</p>
+        <ul>
+            <li>点击任意字段进行在线编辑修改</li>
+            <li>增加或删除材料清单中的项目</li>
+            <li>点击“确认发布”：政策正式生效，学生端可见</li>
+            <li>点击“保存草稿”：政策保持草稿态，学生端不可见</li>
+        </ul>
+        <p><strong>发布前置条件</strong>：导员点击“确认发布”后，系统执行以下原子化操作：</p>
+        <ol>
+            <li>写入元数据到MySQL</li>
+            <li>写入向量数据到向量知识库</li>
+            <li>更新政策状态为“已发布”</li>
+        </ol>
+        <div class="highlight-box warning">
+            <strong>⚠️ 以上三步必须全部成功</strong>，否则整体事务回滚，政策保持草稿态。
+        </div>
+
+        <p><strong>三态流转</strong>：</p>
+        <table>
+            <thead><tr><th>状态</th><th>含义</th><th>学生端可见性</th></tr></thead>
+            <tbody>
+                <tr><td>草稿态</td><td>文档已上传，解析完成，尚未发布</td><td>❌ 不可见</td></tr>
+                <tr><td>待确认</td><td>导员正在预览页核对信息</td><td>❌ 不可见</td></tr>
+                <tr><td>已发布</td><td>导员已确认发布，政策正式生效</td><td>✅ 可见</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.3.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>必填字段（项目名称、截止时间、材料清单）为空</td><td>禁止发布，提示“请完善必填信息”</td></tr>
+                <tr><td>截止时间早于当前时间</td><td>警告“截止时间已过期，请确认”</td></tr>
+                <tr><td>同一项目已存在生效政策</td><td>警告“该项目已有生效政策，发布后将自动归档旧版”</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-4">3.4 辅导员端 — 电子版初审</h3>
+
+        <h4>3.4.1 功能描述</h4>
+        <p>辅导员在线初审学生提交的电子版材料，按项目分类查看和处理。</p>
+
+        <h4>3.4.2 功能细节</h4>
+        <p><strong>项目分类视图（第一级）</strong>：</p>
+        <div class="highlight-box">
+            📋 待初审项目分类<br>
+            ├── 国家奖学金（12 份待审）<br>
+            ├── 校长奖学金（5 份待审）<br>
+            ├── 国际会议报销（3 份待审）<br>
+            └── 助学金申请（8 份待审）
+        </div>
+        <p><strong>学生申请列表（第二级）</strong>：</p>
+        <p>辅导员点击具体项目后，进入该项目下的学生申请列表：</p>
+        <table>
+            <thead><tr><th>展示字段</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>学生姓名</td><td>申请者姓名</td></tr>
+                <tr><td>学号</td><td>申请者学号</td></tr>
+                <tr><td>提交时间</td><td>电子版材料提交时间</td></tr>
+                <tr><td>操作</td><td>点击进入审核详情页</td></tr>
+            </tbody>
+        </table>
+        <p><strong>审核详情页功能</strong>：</p>
+        <ul>
+            <li>在线预览学生上传的电子版材料（PDF/JPG/PNG）</li>
+            <li>下载材料到本地</li>
+            <li><strong>初审通过</strong>：点击后状态变为“初审通过”，学生端收到通知</li>
+            <li><strong>需修正</strong>：填写修正意见（可针对单个材料反馈），状态变为“需修正”，学生端收到修正通知</li>
+        </ul>
+        <div class="highlight-box">
+            <strong>🔒 权限控制</strong>：辅导员只能看到自己所辖学院学生的申请。不同学院的数据相互隔离。
+        </div>
+
+        <h4>3.4.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>待初审列表为空</td><td>显示“暂无待初审申请”</td></tr>
+                <tr><td>学生未上传任何材料</td><td>不进入待初审列表</td></tr>
+                <tr><td>导员未填写修正意见直接退回</td><td>强制要求填写意见</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-5">3.5 辅导员端 — 纸质版终核</h3>
+
+        <h4>3.5.1 功能描述</h4>
+        <p>辅导员终核学生提交的纸质版材料，重点检查材料齐全性与签章合规性。</p>
+
+        <h4>3.5.2 功能细节</h4>
+        <p>辅导员在“待终核列表”中点击学生申请，进入终核详情页。页面展示该生已提交的电子版材料清单，供导员逐项核对纸质版：</p>
+        <table>
+            <thead><tr><th>核验项目</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td><strong>材料是否齐全</strong></td><td>对照清单，确认学生是否提交了所有要求的纸质材料</td></tr>
+                <tr><td><strong>签章是否完备</strong></td><td>重点检查每份材料上要求的签名、公章、日期等是否完整、合规（如：是否为单位公章而非部门章、签名是否为本人手签等）</td></tr>
+                <tr><td><strong>信息是否一致</strong></td><td>核对纸质版内容与电子版是否一致（此项为辅助检查，非唯一重点）</td></tr>
+            </tbody>
+        </table>
+        <p>所有项目核验无误后，点击“<strong>终核通过</strong>”，状态变为“已交校级待审批”，系统将该申请推送至校级管理员端。</p>
+        <p>如发现问题，可选择“<strong>退回修正</strong>”并注明具体原因（如：“缺少学院公章”或“推荐信未签名”）。</p>
+
+        <h4>3.5.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>纸质版缺少盖章</td><td>退回修正，注明“缺少XX单位公章”</td></tr>
+                <tr><td>纸质版缺少签名</td><td>退回修正，注明“缺少XX人签名”</td></tr>
+                <tr><td>材料不齐全</td><td>退回修正，注明“缺少XX材料”</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-6">3.6 校级管理员 — 最终审批</h3>
+
+        <h4>3.6.1 功能描述</h4>
+        <p>校级管理员（学生处、国际交流处、财务处等）对辅导员终核通过并提交上来的纸质版材料进行最终合规性审批。</p>
+        <div class="highlight-box warning">
+            <strong>📌 审批对象</strong>：校级管理员审批的是<strong>纸质版材料</strong>，而非电子版。辅导员终核通过后需将纸质材料整理上交至校级部门，由校级管理员进行最终审批。
+        </div>
+
+        <h4>3.6.2 功能细节</h4>
+        <p><strong>前置条件</strong>：该申请已通过辅导员终核（纸质版材料已由辅导员核验齐全并签章确认）。</p>
+        <p><strong>第一级：按项目分类</strong></p>
+        <div class="highlight-box">
+            📋 待审批项目列表<br>
+            ├── 国家奖学金（12 份待审）<br>
+            ├── 校长奖学金（5 份待审）<br>
+            ├── 国际会议报销（3 份待审）<br>
+            └── 助学金申请（8 份待审）
+        </div>
+        <p><strong>第二级：项目下按学院分组</strong></p>
+        <p>点击具体项目后，展开该项目的待审批列表，按学院分组展示：</p>
+        <div class="highlight-box">
+            📋 国家奖学金（12 份待审）<br>
+            ├── 计算机学院（4 份）<br>
+            │&nbsp;&nbsp; ├── 张三（20240301）<br>
+            │&nbsp;&nbsp; ├── 李四（20240305）<br>
+            │&nbsp;&nbsp; └── ...<br>
+            ├── 人文学院（3 份）<br>
+            │&nbsp;&nbsp; ├── 王五（20240112）<br>
+            │&nbsp;&nbsp; └── ...<br>
+            └── 经济管理学院（5 份）<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ├── 赵六（20240208）<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; └── ...
+        </div>
+        <p><strong>设计说明</strong>：</p>
+        <ul>
+            <li>每个学院分组显示待审批份数，管理员可快速了解各学院的提交进度</li>
+            <li>点击具体学生行，进入审批详情页，预览纸质版材料的电子扫描件（如有）或查看辅导员终核记录</li>
+            <li>支持按项目筛选、按学院分组浏览，便于集中处理同一学院的多份申请</li>
+        </ul>
+        <p><strong>审批操作</strong>：</p>
+        <ul>
+            <li><strong>审批通过</strong>：确认纸质版材料符合政策要求后，点击通过，流程正式结束</li>
+            <li><strong>审批驳回</strong>：如发现材料不符合政策规定（如成绩未达标、论文不在目录内），填写驳回理由，退回至学生端，状态变为“需修正”</li>
+        </ul>
+
+        <h4>3.6.3 权限隔离</h4>
+        <table>
+            <thead><tr><th>校级管理员角色</th><th>可查看的项目</th></tr></thead>
+            <tbody>
+                <tr><td>学生处管理员</td><td>国家奖学金、校长奖学金、助学金等学生奖励类</td></tr>
+                <tr><td>国际交流处管理员</td><td>国际会议报销、出国交流资助等</td></tr>
+                <tr><td>财务处管理员</td><td>各类报销申请</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.6.4 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>待审批列表为空</td><td>显示“暂无待审批申请”</td></tr>
+                <tr><td>审批驳回未填写理由</td><td>强制要求填写驳回理由</td></tr>
+                <tr><td>同一项目下某学院无申请</td><td>该学院分组不显示</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-7">3.7 辅导员端 — 数据统计看板</h3>
+
+        <h4>3.7.1 功能描述</h4>
+        <p>展示每个政策的统计数据，帮助导员掌握申请进度。</p>
+
+        <h4>3.7.2 功能细节</h4>
+        <table>
+            <thead><tr><th>统计指标</th><th>含义</th></tr></thead>
+            <tbody>
+                <tr><td>查看人数</td><td>点击查看该政策详情的学生数</td></tr>
+                <tr><td>准备申请人数</td><td>点击“开始准备”的学生数</td></tr>
+                <tr><td>已提交电子版人数</td><td>已完成电子版提交的学生数</td></tr>
+                <tr><td>待初审人数</td><td>电子版已提交、等待导员初审的学生数</td></tr>
+                <tr><td>待终核人数</td><td>初审通过、已提交纸质版、等待终核的学生数</td></tr>
+                <tr><td>已交校级待审批人数</td><td>终核通过、已上交校级部门的申请数</td></tr>
+                <tr><td>已完成人数</td><td>校级审批通过、流程完结的学生数</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-8">3.8 学生端 — 综合信息看板</h3>
+
+        <h4>3.8.1 功能描述</h4>
+        <p>学生登录后默认进入信息看板，展示可申请的政策卡片列表。</p>
+
+        <h4>3.8.2 功能细节</h4>
+        <ul>
+            <li>展示当前可申请的政策卡片列表</li>
+            <li>每张卡片包含：政策名称、截止日期倒计时、发布学院、当前申请进度状态</li>
+            <li>列表自动过滤：仅显示符合该生学历 + 学院 + 年级的有效政策</li>
+            <li>按截止时间由近及远排序</li>
+        </ul>
+
+        <h4>3.8.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>无可申请政策</td><td>显示“暂无符合条件的政策”</td></tr>
+                <tr><td>政策已过期</td><td>不显示在看板中</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-9">3.9 学生端 — 智能问答Agent</h3>
+
+        <h4>3.9.1 功能描述</h4>
+        <p>基于RAG的智能问答助手，回答政策相关问题。</p>
+
+        <h4>3.9.2 功能细节</h4>
+        <ul>
+            <li><strong>入口</strong>：看板页面右下角的悬浮对话框</li>
+            <li>支持多轮对话与上下文记忆</li>
+            <li>回答能力覆盖：政策内容查询、申请条件咨询、材料清单询问、截止时间查询等</li>
+            <li>所有事实性回答必须标注来源（政策名称及章节）</li>
+            <li>当学生询问“需要什么材料”或“怎么申请”时，Agent回答后主动追加引导：“是否需要将此申请添加到您的个人进度跟踪中？[是的，开始准备]”</li>
+        </ul>
+
+        <p><strong>工具调用接口</strong>：</p>
+        <table>
+            <thead><tr><th>工具名称</th><th>功能描述</th><th>输入参数</th><th>输出</th></tr></thead>
+            <tbody>
+                <tr><td>截止时间查询器</td><td>查询特定项目的材料提交截止时间</td><td>项目名称/政策ID</td><td>截止时间</td></tr>
+                <tr><td>材料清单检索器</td><td>查询特定项目所需提交的材料清单</td><td>项目名称/政策ID</td><td>材料列表</td></tr>
+                <tr><td>政策原文摘录器</td><td>语义检索返回相关原文段落</td><td>用户问题</td><td>最相关的3段原文+来源</td></tr>
+            </tbody>
+        </table>
+        <p><strong>调用策略</strong>：三个工具无依赖关系，允许并行调用。</p>
+
+        <h4>3.9.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>问题与政策无关</td><td>回复“未找到相关信息，建议联系辅导员确认”</td></tr>
+                <tr><td>多轮对话超过10轮</td><td>提示“如需继续咨询，请重新提问”</td></tr>
+                <tr><td>工具调用超过5步</td><td>强制转人工提示</td></tr>
+                <tr><td>工具调用超过3秒无返回</td><td>触发兜底话术</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-10">3.10 学生端 — 申请进度跟踪器</h3>
+
+        <h4>3.10.1 功能描述</h4>
+        <p>学生启动申请后，系统提供全流程进度跟踪面板。</p>
+
+        <h4>3.10.2 功能细节</h4>
+        <p><strong>启动与材料清单</strong>：</p>
+        <ul>
+            <li>学生点击“开始准备”，系统生成申请进度跟踪面板</li>
+            <li>面板展示材料清单（来源于导员发布时确认的版本）</li>
+            <li>每项材料对应一个独立的上传入口</li>
+            <li>逐项上传电子版文件（PDF/JPG/PNG，≤5MB）</li>
+            <li>系统实时记录每项材料的“已上传/未上传”状态</li>
+        </ul>
+
+        <p><strong>完整状态流转图</strong>：</p>
+        <div class="flow-chart">
+未开始（默认，学生刚查看政策）
+    ↓ 点击“开始准备”
+准备中（系统展示清单，学生逐项上传材料）
+    ↓ 所有材料上传完成 → 点击“提交电子版”
+待初审（辅导员端收到待初审通知）
+    ↓
+    ├── 辅导员反馈“初审通过”
+    │       ↓
+    │   初审通过（学生收到通知：可提交纸质版）
+    │       ↓
+    │   学生线下提交纸质版至辅导员处 → 点击“我已提交纸质版”
+    │       ↓
+    │   待终核（辅导员端收到待终核通知）
+    │       ↓
+    │   辅导员核对纸质材料齐全性与签章
+    │       ↓
+    │   辅导员点击“终核通过”
+    │       ↓
+    │   已交校级待审批（校级管理员端收到待审批通知）
+    │       ↓
+    │   校级管理员审批纸质版材料
+    │       ↓
+    │   ✅ 已完成（流程结束）
+    │
+    └── 辅导员反馈“需修正”
+            ↓
+        需修正（学生收到修正意见通知）
+            ↓
+        学生查看修正意见 → 修改对应材料 → 重新上传
+            ↓
+        重新提交 → 回到“待初审”
+        </div>
+
+        <p><strong>状态定义表</strong>：</p>
+        <table>
+            <thead><tr><th>状态</th><th>含义</th><th>可执行操作</th></tr></thead>
+            <tbody>
+                <tr><td>未开始</td><td>学生刚查看政策</td><td>点击“开始准备”</td></tr>
+                <tr><td>准备中</td><td>学生正在准备材料</td><td>上传材料、勾选清单</td></tr>
+                <tr><td>待提交</td><td>所有材料已上传</td><td>点击“提交电子版”</td></tr>
+                <tr><td>待初审</td><td>等待辅导员初审电子版</td><td>等待</td></tr>
+                <tr><td>需修正</td><td>辅导员要求修改</td><td>查看意见、重新上传、重新提交</td></tr>
+                <tr><td>初审通过</td><td>电子版审核通过</td><td>线下提交纸质版，点击“我已提交纸质版”</td></tr>
+                <tr><td>待终核</td><td>等待辅导员终核纸质版</td><td>等待</td></tr>
+                <tr><td>已交校级待审批</td><td>辅导员终核通过，等待校级审批</td><td>等待</td></tr>
+                <tr><td>已完成</td><td>流程结束</td><td>无</td></tr>
+            </tbody>
+        </table>
+
+        <h4>3.10.3 边界条件</h4>
+        <table>
+            <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+            <tbody>
+                <tr><td>材料清单为空</td><td>显示“该政策暂无材料清单，请联系辅导员确认”</td></tr>
+                <tr><td>未上传任何材料点击提交</td><td>提示“请至少上传一项材料”</td></tr>
+                <tr><td>部分材料未上传点击提交</td><td>提示“以下材料尚未上传：[列表]，确认提交？”</td></tr>
+                <tr><td>文件格式不正确</td><td>提示“仅支持PDF、JPG、PNG格式”</td></tr>
+                <tr><td>文件超过5MB</td><td>提示“文件过大，请压缩后上传”</td></tr>
+            </tbody>
+        </table>
+
+
+        <h3 id="sec3-11">3.11 学生端 — 政策收藏</h3>
+
+        <h4>3.11.1 功能描述</h4>
+        <p>学生可收藏感兴趣的政策，便于快速查阅。</p>
+
+        <h4>3.11.2 功能细节</h4>
+        <ul>
+            <li>每个政策详情页提供“收藏”按钮</li>
+            <li>收藏的政策归入“我的关注”列表</li>
+            <li>支持取消收藏</li>
+        </ul>
+
+
+        <!-- ==================== 第4章 ==================== -->
+        <h2 id="ch4">第4章 数据模型设计</h2>
+
+        <h3>4.1 ER图（实体关系图）</h3>
+
+        <div class="mermaid-container">
+            <div class="mermaid">
+                erDiagram
+                users ||--o{ policies : "发布"
+                users ||--o{ user_favorites : "收藏"
+                users ||--o{ user_applications : "提交申请"
+                users ||--o{ audit_logs : "记录操作"
+
+                policies ||--|| policy_metadata : "拥有"
+                policies ||--o{ policy_chunks : "包含"
+                policies ||--o{ user_favorites : "被收藏"
+                policies ||--o{ user_applications : "关联申请"
+                policies ||--o{ audit_logs : "记录变更"
+
+                user_applications ||--o{ application_materials : "包含"
+
+                users {
+                    int user_id PK
+                    varchar username UK
+                    varchar password_hash
+                    varchar name
+                    enum role
+                    varchar department
+                    enum education_level
+                    varchar grade
+                    varchar admin_scope
+                    varchar school_id
+                    datetime created_at
+                    datetime updated_at
+                }
+
+                policies {
+                    int policy_id PK
+                    varchar title
+                    longtext content_full
+                    varchar department
+                    enum education_level
+                    json applicable_grades
+                    varchar project_category
+                    enum status
+                    int created_by FK
+                    datetime created_at
+                    datetime published_at
+                    datetime archived_at
+                }
+
+                policy_metadata {
+                    int metadata_id PK
+                    int policy_id FK
+                    varchar project_name
+                    datetime deadline
+                    json prerequisites
+                    json mutually_exclusive
+                    json material_list
+                    decimal confidence_score
+                    datetime created_at
+                    datetime updated_at
+                }
+
+                policy_chunks {
+                    int chunk_id PK
+                    int policy_id FK
+                    text chunk_content
+                    int chunk_index
+                    varchar vector_id
+                    datetime created_at
+                }
+
+                user_favorites {
+                    int favorite_id PK
+                    int user_id FK
+                    int policy_id FK
+                    datetime created_at
+                }
+
+                user_applications {
+                    int application_id PK
+                    int user_id FK
+                    int policy_id FK
+                    enum status
+                    datetime applied_at
+                    datetime submitted_at
+                    datetime reviewed_at
+                    datetime paper_submitted_at
+                    datetime final_reviewed_at
+                    datetime admin_reviewed_at
+                    json feedback
+                    datetime created_at
+                    datetime updated_at
+                }
+
+                application_materials {
+                    int material_id PK
+                    int application_id FK
+                    varchar material_name
+                    varchar file_name
+                    varchar file_path
+                    int file_size
+                    enum upload_status
+                    datetime uploaded_at
+                    datetime created_at
+                    datetime updated_at
+                }
+
+                audit_logs {
+                    int log_id PK
+                    int policy_id FK
+                    int operator_id FK
+                    varchar action
+                    varchar field_changed
+                    text old_value
+                    text new_value
+                    datetime created_at
+                }
+            </div>
+        </div>
+
+        <h3>4.2 表关系说明</h3>
+        <table>
+            <thead><tr><th>主表</th><th>从表</th><th>关系类型</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td><code>users</code></td><td><code>policies</code></td><td>一对多</td><td>一个用户（辅导员/管理员）可以发布多条政策</td></tr>
+                <tr><td><code>users</code></td><td><code>user_applications</code></td><td>一对多</td><td>一个学生可以提交多个申请</td></tr>
+                <tr><td><code>users</code></td><td><code>user_favorites</code></td><td>一对多</td><td>一个学生可以收藏多条政策</td></tr>
+                <tr><td><code>users</code></td><td><code>audit_logs</code></td><td>一对多</td><td>一个用户可以产生多条操作日志</td></tr>
+                <tr><td><code>policies</code></td><td><code>policy_metadata</code></td><td>一对一</td><td>一条政策对应一份元数据</td></tr>
+                <tr><td><code>policies</code></td><td><code>policy_chunks</code></td><td>一对多</td><td>一条政策切片为多条向量片段</td></tr>
+                <tr><td><code>policies</code></td><td><code>user_applications</code></td><td>一对多</td><td>一条政策可被多个学生申请</td></tr>
+                <tr><td><code>policies</code></td><td><code>user_favorites</code></td><td>一对多</td><td>一条政策可被多个学生收藏</td></tr>
+                <tr><td><code>policies</code></td><td><code>audit_logs</code></td><td>一对多</td><td>一条政策可有多条变更日志</td></tr>
+                <tr><td><code>user_applications</code></td><td><code>application_materials</code></td><td>一对多</td><td>一个申请包含多份上传材料</td></tr>
+            </tbody>
+        </table>
+
+        <h3>4.3 核心字段枚举值说明</h3>
+        <table>
+            <thead><tr><th>表</th><th>字段</th><th>可选值</th></tr></thead>
+            <tbody>
+                <tr><td><code>users</code></td><td><code>role</code></td><td><code>student</code> / <code>teacher</code> / <code>admin</code></td></tr>
+                <tr><td><code>users</code></td><td><code>education_level</code></td><td><code>本科</code> / <code>硕士</code> / <code>博士</code></td></tr>
+                <tr><td><code>policies</code></td><td><code>education_level</code></td><td><code>本科</code> / <code>硕士</code> / <code>博士</code> / <code>全校</code></td></tr>
+                <tr><td><code>policies</code></td><td><code>status</code></td><td><code>draft</code>（草稿） / <code>published</code>（已发布） / <code>archived</code>（已归档）</td></tr>
+                <tr><td><code>user_applications</code></td><td><code>status</code></td><td><code>not_started</code> / <code>preparing</code> / <code>submitted</code> / <code>pending_review</code> / <code>needs_revision</code> / <code>初审通过</code> / <code>pending_final</code> / <code>待终核</code> / <code>pending_admin</code> / <code>completed</code></td></tr>
+                <tr><td><code>application_materials</code></td><td><code>upload_status</code></td><td><code>not_uploaded</code> / <code>uploaded</code> / <code>rejected</code></td></tr>
+            </tbody>
+        </table>
+
+        <h3>4.4 表结构详细设计</h3>
+
+        <h4>4.4.1 users（用户表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>user_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>用户ID</td></tr>
+                <tr><td>username</td><td>VARCHAR(50)</td><td>UNIQUE NOT NULL</td><td>登录用户名</td></tr>
+                <tr><td>password_hash</td><td>VARCHAR(255)</td><td>NOT NULL</td><td>密码哈希值（bcrypt）</td></tr>
+                <tr><td>name</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>真实姓名</td></tr>
+                <tr><td>role</td><td>ENUM('student','teacher','admin')</td><td>NOT NULL</td><td>用户角色</td></tr>
+                <tr><td>department</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>所属学院</td></tr>
+                <tr><td>education_level</td><td>ENUM('本科','硕士','博士')</td><td>NULL</td><td>学历层级（学生专用）</td></tr>
+                <tr><td>grade</td><td>VARCHAR(10)</td><td>NULL</td><td>入学年份（学生专用）</td></tr>
+                <tr><td>admin_scope</td><td>VARCHAR(100)</td><td>NULL</td><td>校级管理员管辖范围</td></tr>
+                <tr><td>school_id</td><td>VARCHAR(20)</td><td>NULL</td><td>学号/工号（预留CAS）</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+                <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP ON UPDATE</td><td>更新时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.2 policies（政策主表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>policy_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>政策ID</td></tr>
+                <tr><td>title</td><td>VARCHAR(200)</td><td>NOT NULL</td><td>政策标题</td></tr>
+                <tr><td>content_full</td><td>LONGTEXT</td><td>NOT NULL</td><td>全文纯文本</td></tr>
+                <tr><td>department</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>发布学院</td></tr>
+                <tr><td>education_level</td><td>ENUM('本科','硕士','博士','全校')</td><td>NOT NULL</td><td>适用学历</td></tr>
+                <tr><td>applicable_grades</td><td>JSON</td><td>NOT NULL</td><td>适用年级（如["2023","2024"]）</td></tr>
+                <tr><td>project_category</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>项目分类（如“国家奖学金”）</td></tr>
+                <tr><td>status</td><td>ENUM('draft','published','archived')</td><td>DEFAULT 'draft'</td><td>状态：草稿/已发布/已归档</td></tr>
+                <tr><td>created_by</td><td>INT</td><td>FOREIGN KEY</td><td>发布者ID</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+                <tr><td>published_at</td><td>DATETIME</td><td>NULL</td><td>发布时间</td></tr>
+                <tr><td>archived_at</td><td>DATETIME</td><td>NULL</td><td>归档时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.3 policy_metadata（政策元数据表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>metadata_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>元数据ID</td></tr>
+                <tr><td>policy_id</td><td>INT</td><td>FOREIGN KEY UNIQUE</td><td>政策ID（一对一）</td></tr>
+                <tr><td>project_name</td><td>VARCHAR(200)</td><td>NOT NULL</td><td>项目名称</td></tr>
+                <tr><td>deadline</td><td>DATETIME</td><td>NOT NULL</td><td>截止时间</td></tr>
+                <tr><td>prerequisites</td><td>JSON</td><td>NULL</td><td>硬性门槛（数组）</td></tr>
+                <tr><td>mutually_exclusive</td><td>JSON</td><td>NULL</td><td>互斥项（数组）</td></tr>
+                <tr><td>material_list</td><td>JSON</td><td>NOT NULL</td><td>材料清单（数组）</td></tr>
+                <tr><td>confidence_score</td><td>DECIMAL(3,2)</td><td>NULL</td><td>LLM提取置信度</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+                <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP ON UPDATE</td><td>更新时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.4 policy_chunks（政策切片表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>chunk_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>切片ID</td></tr>
+                <tr><td>policy_id</td><td>INT</td><td>FOREIGN KEY</td><td>政策ID</td></tr>
+                <tr><td>chunk_content</td><td>TEXT</td><td>NOT NULL</td><td>切片内容</td></tr>
+                <tr><td>chunk_index</td><td>INT</td><td>NOT NULL</td><td>切片顺序号</td></tr>
+                <tr><td>vector_id</td><td>VARCHAR(100)</td><td>NULL</td><td>向量库中的ID</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.5 user_favorites（用户收藏表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>favorite_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>收藏ID</td></tr>
+                <tr><td>user_id</td><td>INT</td><td>FOREIGN KEY</td><td>用户ID</td></tr>
+                <tr><td>policy_id</td><td>INT</td><td>FOREIGN KEY</td><td>政策ID</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>收藏时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.6 user_applications（用户申请表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>application_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>申请ID</td></tr>
+                <tr><td>user_id</td><td>INT</td><td>FOREIGN KEY</td><td>学生ID</td></tr>
+                <tr><td>policy_id</td><td>INT</td><td>FOREIGN KEY</td><td>政策ID</td></tr>
+                <tr><td>status</td><td>ENUM('not_started','preparing','submitted','pending_review','needs_revision','初审通过','pending_final','待终核','pending_admin','completed')</td><td>DEFAULT 'not_started'</td><td>申请状态</td></tr>
+                <tr><td>applied_at</td><td>DATETIME</td><td>NULL</td><td>开始准备时间</td></tr>
+                <tr><td>submitted_at</td><td>DATETIME</td><td>NULL</td><td>电子版提交时间</td></tr>
+                <tr><td>reviewed_at</td><td>DATETIME</td><td>NULL</td><td>初审时间</td></tr>
+                <tr><td>paper_submitted_at</td><td>DATETIME</td><td>NULL</td><td>纸质版提交时间</td></tr>
+                <tr><td>final_reviewed_at</td><td>DATETIME</td><td>NULL</td><td>辅导员终核时间</td></tr>
+                <tr><td>admin_reviewed_at</td><td>DATETIME</td><td>NULL</td><td>校级审批时间</td></tr>
+                <tr><td>feedback</td><td>JSON</td><td>NULL</td><td>修正意见</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+                <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP ON UPDATE</td><td>更新时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.7 application_materials（申请材料表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>material_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>材料ID</td></tr>
+                <tr><td>application_id</td><td>INT</td><td>FOREIGN KEY</td><td>申请ID</td></tr>
+                <tr><td>material_name</td><td>VARCHAR(100)</td><td>NOT NULL</td><td>材料名称</td></tr>
+                <tr><td>file_name</td><td>VARCHAR(200)</td><td>NULL</td><td>原始文件名</td></tr>
+                <tr><td>file_path</td><td>VARCHAR(500)</td><td>NULL</td><td>存储路径</td></tr>
+                <tr><td>file_size</td><td>INT</td><td>NULL</td><td>文件大小（字节）</td></tr>
+                <tr><td>upload_status</td><td>ENUM('not_uploaded','uploaded','rejected')</td><td>DEFAULT 'not_uploaded'</td><td>上传状态</td></tr>
+                <tr><td>uploaded_at</td><td>DATETIME</td><td>NULL</td><td>上传时间</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>创建时间</td></tr>
+                <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP ON UPDATE</td><td>更新时间</td></tr>
+            </tbody>
+        </table>
+
+        <h4>4.4.8 audit_logs（审计日志表）</h4>
+        <table>
+            <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>log_id</td><td>INT</td><td>PRIMARY KEY AUTO_INCREMENT</td><td>日志ID</td></tr>
+                <tr><td>policy_id</td><td>INT</td><td>FOREIGN KEY</td><td>政策ID</td></tr>
+                <tr><td>operator_id</td><td>INT</td><td>FOREIGN KEY</td><td>操作人ID</td></tr>
+                <tr><td>action</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>操作类型</td></tr>
+                <tr><td>field_changed</td><td>VARCHAR(50)</td><td>NULL</td><td>修改字段</td></tr>
+                <tr><td>old_value</td><td>TEXT</td><td>NULL</td><td>旧值</td></tr>
+                <tr><td>new_value</td><td>TEXT</td><td>NULL</td><td>新值</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>操作时间</td></tr>
+            </tbody>
+        </table>
+
+
+        <!-- ==================== 第5章 ==================== -->
+        <h2 id="ch5">第5章 技术选型及理由</h2>
+
+        <h3>5.1 技术选型总览</h3>
+        <table>
+            <thead><tr><th>层级</th><th>技术选型</th><th>选型理由</th></tr></thead>
+            <tbody>
+                <tr><td><strong>前端框架</strong></td><td>React + Ant Design</td><td>组件丰富、生态成熟、适合PC端管理后台快速开发</td></tr>
+                <tr><td><strong>后端框架</strong></td><td>Python Flask / FastAPI</td><td>轻量、灵活、与AI生态（LangChain等）集成友好</td></tr>
+                <tr><td><strong>数据库</strong></td><td>MySQL 8.0</td><td>成熟稳定、事务支持完善、适合结构化数据存储</td></tr>
+                <tr><td><strong>向量数据库</strong></td><td>Dify内置向量库（Qdrant）</td><td>与Dify平台深度集成，开箱即用</td></tr>
+                <tr><td><strong>文档解析</strong></td><td>MinerU / Unstructured</td><td>开源、支持OCR、对中文文档支持良好</td></tr>
+                <tr><td><strong>LLM框架</strong></td><td>Dify</td><td>低代码Agent编排、内置RAG能力、可视化工作流</td></tr>
+                <tr><td><strong>LLM模型</strong></td><td>DeepSeek / 通义千问</td><td>中文能力强、API成本低、支持Function Calling</td></tr>
+                <tr><td><strong>Embedding模型</strong></td><td>text-embedding-v3 / bge-large</td><td>中文语义检索效果好</td></tr>
+                <tr><td><strong>对象存储</strong></td><td>本地文件系统 / MinIO</td><td>存储学生上传的电子材料</td></tr>
+                <tr><td><strong>密码加密</strong></td><td>bcrypt</td><td>行业标准、抗彩虹表攻击</td></tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 核心组件选型详解</h3>
+
+        <h4>5.2.1 文档解析：MinerU + Dify参数提取器</h4>
+        <p><strong>解析流程</strong>：</p>
+        <ol>
+            <li><strong>文档解析</strong>：使用MinerU将PDF/Word转换为Markdown或JSON</li>
+            <li><strong>内容分块</strong>：将长文本按逻辑段落切分</li>
+            <li><strong>相关性分类</strong>：LLM判断段落是否包含目标信息</li>
+            <li><strong>结构化提取</strong>：使用Dify的参数提取器节点，按预设JSON Schema提取字段</li>
+        </ol>
+        <p><strong>选型理由</strong>：</p>
+        <ul>
+            <li>MinerU对中文PDF支持良好，支持OCR和复杂版式</li>
+            <li>Dify参数提取器可视化配置，无需编写复杂代码</li>
+            <li>组合方案兼顾解析质量与开发效率</li>
+        </ul>
+
+        <h4>5.2.2 LLM应用开发平台：Dify</h4>
+        <p><strong>选型理由</strong>：</p>
+        <ul>
+            <li>开源、支持私有化部署</li>
+            <li>内置RAG模块，支持混合检索（关键词+向量+元数据过滤）</li>
+            <li>可视化Agent编排，支持工具调用</li>
+            <li>低代码特性降低开发门槛</li>
+        </ul>
+
+        <h4>5.2.3 检索策略：RAG混合检索</h4>
+        <p><strong>检索执行顺序</strong>：</p>
+        <ol>
+            <li>元数据过滤（SQL查询）：根据学生学历+学院筛选候选文档</li>
+            <li>混合检索：在候选集内并行执行BM25关键词检索 + 向量检索</li>
+            <li>RRF融合：合并排序，返回Top K结果</li>
+        </ol>
+
+
+        <!-- ==================== 第6章 ==================== -->
+        <h2 id="ch6">第6章 完整申请审核流程总览</h2>
+
+        <div class="flow-chart">
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                              学生端                                            │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 1. 查看政策 → 点击"开始准备" → 逐项上传电子版材料 → 点击"提交电子版"  │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            │                                      ▼                                         │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 2. 状态：待初审 → 等待辅导员审核电子版                                  │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+                                               ▼
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                           辅导员端（电子版初审）                                 │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 3. 项目分类视图 → 选择项目 → 查看学生电子版材料                        │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            │                                      ▼                                         │
+            │  ┌──────────────────────┐          ┌──────────────────────────────────────┐  │
+            │  │ 4a. 初审通过         │          │ 4b. 需修正 → 填写意见 → 退回学生    │  │
+            │  │ 状态→"初审通过"      │          │ 状态→"需修正"                       │  │
+            │  └──────────────────────┘          └──────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+                                               ▼
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                              学生端                                            │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 5. 收到"初审通过"通知 → 打印纸质材料 → 提交至辅导员处                  │  │
+            │  │    → 点击"我已提交纸质版"                                              │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+                                               ▼
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                           辅导员端（纸质版终核）                                 │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 6. 核对纸质版：①材料是否齐全 ②签名盖章是否完备 ③内容是否一致         │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            │                                      ▼                                         │
+            │  ┌──────────────────────┐          ┌──────────────────────────────────────┐  │
+            │  │ 7a. 终核通过         │          │ 7b. 退回修正 → 注明原因             │  │
+            │  │ 状态→"已交校级待审批" │          │ 状态→"需修正"                       │  │
+            │  └──────────────────────┘          └──────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+                                               ▼
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                         校级管理员端（最终审批）                                 │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 8. 项目分类视图 → 选择项目 → 学院分组 → 查看申请                      │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            │                                      ▼                                         │
+            │  ┌──────────────────────┐          ┌──────────────────────────────────────┐  │
+            │  │ 9a. 审批通过         │          │ 9b. 审批驳回 → 填写理由             │  │
+            │  │ 状态→"已完成"        │          │ 状态→"需修正"                       │  │
+            │  └──────────────────────┘          └──────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+                                               ▼
+            ┌─────────────────────────────────────────────────────────────────────────────────┐
+            │                              学生端                                            │
+            │  ┌─────────────────────────────────────────────────────────────────────────┐  │
+            │  │ 10. ✅ 收到"已完成"通知 → 流程结束                                    │  │
+            │  │     或 收到"审批驳回"通知 → 查看理由 → 修正后重新提交                  │  │
+            │  └─────────────────────────────────────────────────────────────────────────┘  │
+            └─────────────────────────────────────────────────────────────────────────────────┘
+        </div>
+
+
+        <!-- ==================== 第7章 ==================== -->
+        <h2 id="ch7">第7章 分阶段开发计划</h2>
+
+        <h3>7.1 开发原则</h3>
+        <ul>
+            <li><strong>每阶段只做一件事</strong>：各阶段聚焦单一核心目标，功能内聚</li>
+            <li><strong>每阶段有验证标准</strong>：每个阶段结束时必须有可验证的交付成果</li>
+            <li><strong>增量迭代</strong>：后续阶段在前一阶段基础上扩展，不推翻重来</li>
+        </ul>
+
+        <h3>7.2 阶段总览</h3>
+        <table>
+            <thead><tr><th>阶段</th><th>名称</th><th>周期</th><th>核心交付</th></tr></thead>
+            <tbody>
+                <tr><td>阶段0</td><td>环境搭建与基础框架</td><td>1周</td><td>开发环境、数据库、Dify部署</td></tr>
+                <tr><td>阶段1</td><td>用户认证与权限</td><td>1周</td><td>登录注册、角色权限</td></tr>
+                <tr><td>阶段2</td><td>文档上传与解析</td><td>2周</td><td>导员上传、双轨解析、预览纠错</td></tr>
+                <tr><td>阶段3</td><td>政策发布与管理</td><td>1周</td><td>草稿/发布、版本管理、看板</td></tr>
+                <tr><td>阶段4</td><td>智能问答Agent</td><td>2周</td><td>RAG检索、3个工具、对话界面</td></tr>
+                <tr><td>阶段5</td><td>申请进度跟踪</td><td>2周</td><td>材料上传、状态流转、进度面板</td></tr>
+                <tr><td>阶段6</td><td>导员与校级审核管理</td><td>2周</td><td>辅导员初审/终核、校级审批、统计看板</td></tr>
+                <tr><td>阶段7</td><td>集成测试与部署</td><td>1.5周</td><td>端到端测试、生产部署</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段0：环境搭建与基础框架（第1周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>0.1</td><td>部署MySQL 8.0数据库</td><td>数据库服务正常运行，可连接</td></tr>
+                <tr><td>0.2</td><td>部署Dify平台（社区版）</td><td>Dify服务可访问，知识库功能正常</td></tr>
+                <tr><td>0.3</td><td>部署MinerU文档解析服务</td><td>可成功解析测试PDF文件</td></tr>
+                <tr><td>0.4</td><td>创建前端项目（React+Ant Design）</td><td>项目可启动，显示基础页面</td></tr>
+                <tr><td>0.5</td><td>创建后端项目（Flask/FastAPI）</td><td>API服务可启动，返回测试响应</td></tr>
+                <tr><td>0.6</td><td>执行初始化SQL脚本创建所有表</td><td>所有表结构创建成功</td></tr>
+            </tbody>
+        </table>
+        <div class="highlight-box success">
+            <strong>✅ 验证标准</strong>：数据库连接测试通过 | Dify平台可正常访问 | MinerU可解析测试PDF | 前端项目可启动 | 后端API /health 返回 {"status":"ok"}
+        </div>
+
+        <h3>阶段1：用户认证与权限（第2周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>1.1</td><td>实现用户注册（管理员后台创建）</td><td>管理员可创建学生/导员/校级管理员账号</td></tr>
+                <tr><td>1.2</td><td>实现密码bcrypt加密存储</td><td>密码不以明文存储</td></tr>
+                <tr><td>1.3</td><td>实现登录/登出功能</td><td>用户名密码验证通过后可登录</td></tr>
+                <tr><td>1.4</td><td>实现Session/Token管理</td><td>登录后保持会话，超时自动退出</td></tr>
+                <tr><td>1.5</td><td>实现角色权限控制</td><td>不同角色看到不同菜单和功能</td></tr>
+                <tr><td>1.6</td><td>实现首次登录强制修改密码</td><td>首次登录跳转至修改密码页</td></tr>
+                <tr><td>1.7</td><td>实现校级管理员权限范围控制</td><td>不同校级管理员只能看到自己管辖范围内的项目</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段2：文档上传与解析（第3-4周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>2.1</td><td>实现文档上传界面</td><td>支持PDF/Word拖拽上传，必填“适用年级”和“项目分类”</td></tr>
+                <tr><td>2.2</td><td>集成MinerU进行全文提取</td><td>可提取PDF/Word全文文本</td></tr>
+                <tr><td>2.3</td><td>实现轨道一：LLM结构化字段提取</td><td>可提取项目名称、截止时间、材料清单等</td></tr>
+                <tr><td>2.4</td><td>实现轨道二：全文切片与向量化</td><td>文档切片后存入Dify知识库</td></tr>
+                <tr><td>2.5</td><td>实现解析预览与纠错界面</td><td>展示提取字段，支持在线编辑</td></tr>
+                <tr><td>2.6</td><td>实现“保存草稿”功能</td><td>草稿存入库中，学生端不可见</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段3：政策发布与管理（第5周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>3.1</td><td>实现“确认发布”功能</td><td>点击后政策状态变为“已发布”</td></tr>
+                <tr><td>3.2</td><td>实现版本管理（单版本生效）</td><td>同项目旧政策自动归档</td></tr>
+                <tr><td>3.3</td><td>实现学生端看板（只读）</td><td>学生可看到已发布政策列表</td></tr>
+                <tr><td>3.4</td><td>实现政策详情页</td><td>展示政策全文、元数据、材料清单</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段4：智能问答Agent（第6-7周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>4.1</td><td>在Dify中配置RAG知识库</td><td>知识库关联已发布的政策文档</td></tr>
+                <tr><td>4.2</td><td>配置混合检索（BM25+向量+RRF）</td><td>检索结果兼顾关键词和语义匹配</td></tr>
+                <tr><td>4.3</td><td>配置元数据过滤（学历+学院）</td><td>仅检索符合学生身份的政策</td></tr>
+                <tr><td>4.4</td><td>实现3个工具</td><td>各工具可独立调用并返回正确数据</td></tr>
+                <tr><td>4.5</td><td>实现Agent对话界面</td><td>学生可输入问题并得到回答</td></tr>
+                <tr><td>4.6</td><td>实现来源标注</td><td>回答中标注引用自哪份政策</td></tr>
+                <tr><td>4.7</td><td>实现“加入进度跟踪”引导</td><td>回答材料类问题后主动引导</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段5：申请进度跟踪（第8-9周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>5.1</td><td>实现“开始准备”功能</td><td>生成该政策的申请进度跟踪面板</td></tr>
+                <tr><td>5.2</td><td>实现材料清单展示与逐项上传</td><td>每项材料对应独立上传入口</td></tr>
+                <tr><td>5.3</td><td>实现文件上传（PDF/JPG/PNG，≤5MB）</td><td>文件成功上传并存储</td></tr>
+                <tr><td>5.4</td><td>实现“提交电子版”功能</td><td>提交后状态变为“待初审”</td></tr>
+                <tr><td>5.5</td><td>实现状态流转</td><td>各状态间流转正确</td></tr>
+                <tr><td>5.6</td><td>实现“需修正”反馈与重新提交</td><td>学生可查看意见并重新上传</td></tr>
+                <tr><td>5.7</td><td>实现“我已提交纸质版”</td><td>状态变为“待终核”</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段6：导员与校级审核管理（第10-11周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>6.1</td><td>实现辅导员待初审项目分类视图</td><td>按项目分类展示待审数量</td></tr>
+                <tr><td>6.2</td><td>实现项目下学生申请列表</td><td>展示具体学生及其材料</td></tr>
+                <tr><td>6.3</td><td>实现材料在线预览与下载</td><td>导员可查看学生上传的材料</td></tr>
+                <tr><td>6.4</td><td>实现“初审通过”操作</td><td>状态变为“初审通过”</td></tr>
+                <tr><td>6.5</td><td>实现“需修正”操作（含意见填写）</td><td>状态变为“需修正”</td></tr>
+                <tr><td>6.6</td><td>实现辅导员待终核列表</td><td>展示待终核申请</td></tr>
+                <tr><td>6.7</td><td>实现“终核通过”操作（含签章核验）</td><td>状态变为“已交校级待审批”</td></tr>
+                <tr><td>6.8</td><td>实现校级待审批列表（项目→学院两级）</td><td>按项目分类，项目下按学院分组</td></tr>
+                <tr><td>6.9</td><td>实现校级“审批通过”操作</td><td>状态变为“已完成”</td></tr>
+                <tr><td>6.10</td><td>实现校级“审批驳回”操作</td><td>状态变为“需修正”</td></tr>
+                <tr><td>6.11</td><td>实现辅导员端数据统计看板</td><td>展示7项统计数据</td></tr>
+            </tbody>
+        </table>
+
+        <h3>阶段7：集成测试与部署（第12-13周）</h3>
+        <table>
+            <thead><tr><th>序号</th><th>任务</th><th>验收标准</th></tr></thead>
+            <tbody>
+                <tr><td>7.1</td><td>编写端到端测试用例</td><td>覆盖核心用户旅程</td></tr>
+                <tr><td>7.2</td><td>执行集成测试</td><td>所有测试用例通过</td></tr>
+                <tr><td>7.3</td><td>性能测试</td><td>看板&lt;2秒，Agent&lt;3秒</td></tr>
+                <tr><td>7.4</td><td>安全测试</td><td>密码加密、权限隔离验证通过</td></tr>
+                <tr><td>7.5</td><td>部署到测试环境</td><td>内部用户可访问</td></tr>
+                <tr><td>7.6</td><td>用户验收测试（UAT）</td><td>至少3位导员+10位学生+2位校级管理员试用反馈</td></tr>
+                <tr><td>7.7</td><td>部署到生产环境</td><td>正式上线</td></tr>
+            </tbody>
+        </table>
+
+
+        <!-- ==================== 第8章 ==================== -->
+        <h2 id="ch8">第8章 非功能性需求</h2>
+
+        <h3>8.1 平台兼容性</h3>
+        <ul>
+            <li>第一期仅适配PC端（推荐分辨率：1920×1080及1366×768）</li>
+            <li>浏览器兼容：Chrome（最新版）、Edge（最新版）</li>
+        </ul>
+
+        <h3>8.2 性能要求</h3>
+        <table>
+            <thead><tr><th>指标</th><th>要求</th></tr></thead>
+            <tbody>
+                <tr><td>看板首页加载</td><td>&lt; 2秒</td></tr>
+                <tr><td>Agent单次问答响应</td><td>&lt; 3秒（含工具调用）</td></tr>
+                <tr><td>文件上传</td><td>单文件 ≤ 5MB，支持格式：PDF、JPG、PNG</td></tr>
+                <tr><td>并发用户</td><td>内测阶段支持50人同时在线</td></tr>
+            </tbody>
+        </table>
+
+
+        <!-- ==================== 附录 ==================== -->
+        <h2 id="appendix">附录A：术语表</h2>
+        <table>
+            <thead><tr><th>术语</th><th>通俗释义</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Agent</strong></td><td>智能体，能自主规划任务、调用工具、组织回答的AI程序</td></tr>
+                <tr><td><strong>RAG</strong></td><td>检索增强生成，先搜资料再生成回答的技术</td></tr>
+                <tr><td><strong>混合检索</strong></td><td>同时用关键词匹配和语义理解两种方式搜索</td></tr>
+                <tr><td><strong>元数据过滤</strong></td><td>先按标签（如学院、年级）筛选范围，再在范围内搜索</td></tr>
+                <tr><td><strong>结构化提取</strong></td><td>从非结构化文档中抽取出规整的字段</td></tr>
+                <tr><td><strong>向量化</strong></td><td>将文本转换成数字数组，用于理解语义相似性</td></tr>
+                <tr><td><strong>Embedding</strong></td><td>将文字“嵌入”到数学向量空间中的技术</td></tr>
+                <tr><td><strong>RRF</strong></td><td>互逆排名融合，将多个检索结果合并排序的算法</td></tr>
+                <tr><td><strong>BM25</strong></td><td>一种关键词检索算法</td></tr>
+                <tr><td><strong>OCR</strong></td><td>光学字符识别，从图片中识别文字</td></tr>
+                <tr><td><strong>CAS</strong></td><td>中央认证服务，学校统一身份认证协议</td></tr>
+                <tr><td><strong>ER图</strong></td><td>实体关系图，描述数据表之间的关系</td></tr>
+                <tr><td><strong>初审</strong></td><td>辅导员对学生电子版材料的形式审核</td></tr>
+                <tr><td><strong>终核</strong></td><td>辅导员对纸质版材料的齐全性与签章核验</td></tr>
+                <tr><td><strong>校级审批</strong></td><td>校级管理员对纸质版材料的最终合规性审批</td></tr>
+                <tr><td><strong>archived</strong></td><td>“已归档”状态，表示政策已结束生命周期，学生端不可见但后台保留记录</td></tr>
+            </tbody>
+        </table>
+
+        <div class="footer-note">
+            <p>本PRD文档基于2026年7月期间的系列需求讨论整理而成，为“校事通”项目第一期的开发依据。</p>
+            <p style="margin-top:4px; font-size:13px; color:#94a3b8;">—— 文档结束 ——</p>
+        </div>
+
+    </div>
+
+    <!-- Mermaid 渲染脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                themeVariables: {
+                    'primaryColor': '#2563eb',
+                    'primaryTextColor': '#0a1e3c',
+                    'primaryBorderColor': '#2563eb',
+                    'lineColor': '#94a3b8',
+                    'secondaryColor': '#f1f5f9',
+                    'tertiaryColor': '#f8fafc',
+                    'fontSize': '14px',
+                    'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                },
+                er: {
+                    diagramPadding: 20,
+                    layoutDirection: 'TB',
+                    minEntityWidth: 100,
+                    minEntityHeight: 60,
+                    entityPadding: 15,
+                    stroke: '#94a3b8',
+                    fill: '#f8fafc',
+                    fontSize: 14,
+                    useMaxWidth: true
+                }
+            });
+            // 重新渲染所有 mermaid 图表
+            mermaid.run({
+                querySelector: '.mermaid'
+            });
+        });
+    </script>
+
+</body>
+</html>

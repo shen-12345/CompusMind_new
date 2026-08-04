@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“校事通”智能政策问答平台 PRD — 边界增强版</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f7fb; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1e293b; padding: 40px 20px; line-height: 1.7; }
+        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 50px 60px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        h1 { font-size: 28px; font-weight: 700; border-bottom: 3px solid #2563eb; padding-bottom: 12px; margin-bottom: 8px; color: #0a1e3c; }
+        .subtitle { display: flex; gap: 30px; font-size: 14px; color: #64748b; margin-bottom: 32px; flex-wrap: wrap; }
+        .subtitle span { background: #f1f5f9; padding: 2px 14px; border-radius: 20px; }
+        h2 { font-size: 22px; font-weight: 600; margin-top: 40px; margin-bottom: 16px; color: #0a1e3c; padding-left: 14px; border-left: 4px solid #2563eb; }
+        h3 { font-size: 18px; font-weight: 600; margin-top: 28px; margin-bottom: 12px; color: #1e293b; }
+        h4 { font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 8px; color: #334155; }
+        p { margin-bottom: 14px; color: #334155; }
+        ul, ol { margin: 10px 0 16px 24px; color: #334155; }
+        li { margin-bottom: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        th { background: #f1f5f9; font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #eef2f6; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        .highlight-box { background: #f8fafc; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 6px; margin: 16px 0; }
+        .highlight-box.warning { border-left-color: #f59e0b; background: #fffbeb; }
+        .highlight-box.success { border-left-color: #10b981; background: #ecfdf5; }
+        .highlight-box.danger { border-left-color: #ef4444; background: #fef2f2; }
+        .highlight-box.info { border-left-color: #06b6d4; background: #ecfeff; }
+        code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #0f172a; font-family: "SF Mono","Fira Code",monospace; }
+        pre { background: #0f172a; color: #e2e8f0; padding: 16px 20px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6; font-family: "SF Mono","Fira Code",monospace; margin: 12px 0 20px; }
+        .mermaid-container { background: #fafbfc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px; margin: 16px 0 24px; overflow-x: auto; text-align: center; }
+        .mermaid-container svg { max-width: 100%; height: auto; }
+        .flow-chart { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 24px; font-family: "SF Mono","Fira Code",monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; margin: 16px 0 24px; white-space: pre-wrap; word-break: break-word; color: #0f172a; }
+        .toc { background: #f8fafc; border-radius: 8px; padding: 16px 24px; margin: 24px 0 32px; }
+        .toc a { color: #2563eb; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .toc ul { columns: 2; column-gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .toc ul li { margin-bottom: 4px; font-size: 14px; break-inside: avoid; }
+        .toc ul ul { columns: 1; margin-left: 18px; }
+        .toc ul ul li { font-size: 13px; color: #475569; }
+        .new-badge { display: inline-block; background: #dcfce7; color: #166534; font-size: 11px; padding: 0 8px; border-radius: 8px; margin-left: 8px; font-weight: 400; }
+        .edge-badge { display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; padding: 0 8px; border-radius: 8px; margin-left: 6px; font-weight: 400; }
+        .footer-note { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #94a3b8; text-align: center; }
+        @media (max-width: 768px) { .container { padding: 20px 16px; } .toc ul { columns: 1; } table { font-size: 13px; } th, td { padding: 6px 10px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>“校事通”智能政策问答平台</h1>
+    <div class="subtitle">
+        <span>📄 产品需求文档（PRD）</span>
+        <span>🏷️ 版本 V1.5 — 边界增强版</span>
+        <span>📅 2026年7月</span>
+        <span class="new-badge">聚焦边界情况</span>
+    </div>
+
+    <div class="toc">
+        <strong style="font-size:16px;">📑 目录</strong>
+        <ul style="margin-top:8px;">
+            <li><a href="#ch1">第1章 文档说明</a></li>
+            <li><a href="#ch2">第2章 产品概述</a></li>
+            <li><a href="#ch3">第3章 功能需求与边界分析</a>
+                <ul>
+                    <li>3.1 用户认证 · 3.2 文档上传与解析 · 3.3 解析预览与发布</li>
+                    <li>3.4 电子版初审 · 3.5 纸质版终核 · 3.6 校级审批</li>
+                    <li>3.7 数据统计 · 3.8 学生看板 · 3.9 智能问答Agent</li>
+                    <li>3.10 进度跟踪 · 3.11 收藏 · <a href="#sec3-12">3.12 通知系统</a></li>
+                </ul>
+            </li>
+            <li><a href="#ch4">第4章 🆕 全局边界条件矩阵</a></li>
+            <li><a href="#ch5">第5章 🆕 并发与冲突场景</a></li>
+            <li><a href="#ch6">第6章 🆕 状态异常恢复</a></li>
+            <li><a href="#ch7">第7章 数据模型</a></li>
+            <li><a href="#ch8">第8章 技术选型</a></li>
+            <li><a href="#ch9">第9章 分阶段开发计划</a></li>
+        </ul>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 第1章 文档说明 -->
+    <!-- ================================================================ -->
+    <h2 id="ch1">第1章 文档说明</h2>
+    <h3>1.1 文档目的</h3>
+    <p>本文档为"校事通"智能政策问答平台的需求规格说明（PRD V1.5 边界增强版），在保留 V1.0 全部功能需求的基础上，<strong>重点补充和深化了各模块的边界条件、异常场景、并发冲突和状态恢复策略</strong>，为开发团队提供更全面的边界防御设计参考。</p>
+    <div class="highlight-box warning">
+        <strong>📌 阅读指引</strong>：本章档以"边界增强"为核心目标。每个功能模块的"边界条件"和"异常处理"均已大幅扩展，<span class="edge-badge">边界</span>标记为新增边界场景，🆕 标记为新增异常场景。新增第4章（全局边界矩阵）、第5章（并发与冲突）、第6章（状态异常恢复）。
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 第2章 产品概述（保留原内容，略） -->
+    <!-- ================================================================ -->
+    <h2 id="ch2">第2章 产品概述</h2>
+    <p>（保留 V1.0 全文：产品背景、产品目标、用户角色、产品边界）</p>
+
+    <!-- ================================================================ -->
+    <!-- 第3章 功能需求与边界分析（核心增强部分） -->
+    <!-- ================================================================ -->
+    <h2 id="ch3">第3章 功能需求与边界分析</h2>
+
+    <!-- ===== 3.1 用户认证 ===== -->
+    <h3 id="sec3-1">3.1 用户认证模块</h3>
+    <h4>3.1.1 功能描述</h4>
+    <p>系统提供基于账号密码的登录与身份识别功能，支持角色权限隔离。</p>
+
+    <h4>3.1.2 功能细节</h4>
+    <table>
+        <thead><tr><th>功能点</th><th>描述</th></tr></thead>
+        <tbody>
+            <tr><td>用户登录</td><td>输入用户名和密码进行登录</td></tr>
+            <tr><td>身份识别</td><td>登录后识别用户角色，加载对应权限视图</td></tr>
+            <tr><td>密码修改</td><td>首次登录强制修改初始密码；支持自行修改密码</td></tr>
+            <tr><td>会话管理</td><td>登录后保持会话，超时自动退出</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.1.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>用户名不存在</td><td>提示"用户名或密码错误"（不区分具体哪个错，防止账号枚举）</td></tr>
+            <tr><td>密码错误超过5次</td><td>锁定账号15分钟，锁定期间即使正确密码也拒绝登录</td></tr>
+            <tr><td>未登录访问需授权页面</td><td>重定向至登录页，URL保留目标路径，登录后跳回</td></tr>
+            <tr><td>会话超时（30分钟无操作）</td><td>自动退出，提示重新登录；<strong>未保存的草稿内容不丢失</strong>（存入本地或草稿表）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 密码修改后已有Session</td><td>其他已登录设备/标签页的Session保持有效，但涉及敏感操作（如审批）时重新校验密码</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一账号多设备登录</td><td>允许同一账号在不同设备同时登录，但编辑同一资源时后操作者收到冲突提示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 用户在提交表单时Session过期</td><td>弹出"登录已过期，请重新登录"弹窗，登录后<strong>保留表单已填写内容</strong>并继续提交</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 密码输入框粘贴空格</td><td>前端trim去除首尾空格后再提交，但密码内部空格保留</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 密码修改后使用旧密码登录</td><td>拒绝，提示"密码错误"（不提示"密码已修改"）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 账号被管理员手动禁用</td><td>登录时提示"账号已被禁用，请联系管理员"，不暴露禁用原因</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一浏览器同时登录不同角色</td><td>不推荐，但允许。切换角色时清除前一个角色的缓存权限</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 登录页面长时间闲置</td><td>登录页面自身设置较短超时（如10分钟），超时后清除已填内容</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.1.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>数据库连接失败</td><td>提示"系统繁忙，请稍后重试"</td></tr>
+            <tr><td>密码加密失败</td><td>记录日志，提示"注册失败，请联系管理员"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Token被篡改或过期</td><td>清除本地Token，跳转至登录页，不给出具体错误原因</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一秒内大量并发登录请求</td><td>Redis分布式限流，单IP每秒≤5次，超限返回"操作过于频繁"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 登录时用户角色数据损坏</td><td>拒绝登录，提示"账号信息异常，请联系管理员"</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.2 文档上传与解析 ===== -->
+    <h3 id="sec3-2">3.2 辅导员端 — 文档上传与自动解析</h3>
+    <h4>3.2.1 功能描述</h4>
+    <p>辅导员上传政策通知文档，系统自动完成结构化字段提取和全文向量化入库。</p>
+
+    <h4>3.2.2 功能细节</h4>
+    <p><strong>上传要求</strong>：</p>
+    <table>
+        <thead><tr><th>项目</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>支持格式</td><td>PDF、Word（.docx）、扫描件PDF（自动OCR识别）</td></tr>
+            <tr><td>必填标签</td><td>适用年级（如"2023级、2024级"）、项目分类</td></tr>
+            <tr><td>文件大小限制</td><td>≤ 20MB</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.2.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>上传文件为空或损坏</td><td>提示"文件无效，请重新上传"</td></tr>
+            <tr><td>文件格式不支持</td><td>提示"仅支持PDF和Word格式"</td></tr>
+            <tr><td>文件超过20MB</td><td>提示"文件过大，请压缩后上传"</td></tr>
+            <tr><td>LLM提取字段为空</td><td>该字段标记为"⚠️ 未识别，请手动填写"</td></tr>
+            <tr><td>LLM提取置信度 &lt; 80%</td><td>该字段橙色高亮，提示导员重点核对</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文件名含非法字符（\ / : * ? &lt; > |）</td><td>自动过滤非法字符，或提示"文件名包含非法字符，请重命名"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文件名超长（≥200字符）</td><td>截断至200字符，保留扩展名</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 上传过程中网络中断</td><td>前端显示"上传中断"，保留已上传部分，支持断点续传（≥10MB自动启用）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 上传完成后导员立即关闭浏览器（解析未完成）</td><td>解析为异步任务，后台继续执行，完成后通过通知提醒导员前往预览</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一文档被重复上传</td><td>计算文件MD5哈希，命中已有记录时提示"该文档已上传过，是否覆盖？"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档内容为空（全空白页）</td><td>MinerU解析后文本为空，提示"文档内容为空，请上传有效文档"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档为扫描件但OCR完全失败</td><td>提示"OCR识别失败，请上传文字版PDF或手动输入关键信息"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档有密码保护/加密</td><td>提示"文档已加密，请先解密后上传"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档包含大量表格/复杂排版</td><td>LLM提取后，表格内容以Markdown格式呈现，导员在预览页核对</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档页数过多（≥100页）</td><td>提示"文档页数较多，解析时间可能较长"，异步处理，完成后通知</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 上传的文件名包含敏感词（如"机密""内部"）</td><td>提示"文件名包含敏感信息，请重命名后上传"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 上传文件含病毒/恶意代码</td><td>ClamAV扫描，拦截并隔离，提示"上传文件存在安全风险"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 适用年级格式不合法（如"2023级"写成"23级"）</td><td>前端校验格式，提示"请使用完整年份格式，如'2023级'"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 适用年级范围覆盖所有年级（如"2021级、2022级、2023级、2024级"）</td><td>正常处理，但UI上可简化为"全部年级"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文档语言为纯英文或中英混合</td><td>LLM正常提取，但提取结果可能为英文，导员可在预览页修改</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同时上传多个文件（批量上传）</td><td>支持排队上传，并行处理数≤3，超出排队等待</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 磁盘空间不足无法存储</td><td>提示"存储空间不足，请联系管理员"，保留上传记录但标记为"存储失败"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 解析耗时超过5分钟</td><td>前端显示"解析时间较长，请耐心等待"，后台继续，完成后通知</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员在上传过程中点击"取消"或"返回"</td><td>确认弹窗"取消上传将丢弃已上传内容，确认取消？"</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.2.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>LLM服务不可用</td><td>提示"解析服务暂时不可用，请稍后重试"，保留草稿</td></tr>
+            <tr><td>向量化服务不可用</td><td><strong>禁止发布</strong>。提示"向量化服务暂时不可用"，保留草稿态，等待恢复后自动重试</td></tr>
+            <tr><td>向量化入库失败</td><td><strong>整体事务回滚</strong>，元数据和向量数据均不入库</td></tr>
+            <tr><td>OCR识别失败</td><td>提示"文档文字识别失败，请上传文字版PDF或手动输入"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> LLM返回结果JSON格式解析失败</td><td>重试最多3次，仍失败则所有字段标记为"⚠️ 未识别，请手动填写"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> MinerU服务崩溃</td><td>自动切换至Unstructured作为降级方案，切换过程对用户无感</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 提取的截止时间格式无法解析</td><td>标记为"⚠️ 时间格式无法识别，请手动填写"，展示原始文本供参考</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 材料清单提取为空但文档确实有清单</td><td>标记为"⚠️ 未识别，请手动填写"，建议导员从文档中复制</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文件存储服务写入失败</td><td>提示"文件存储失败，请稍后重试"，不占用上传次数</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 上传队列已满（≥10个排队）</td><td>提示"上传队列已满，请等待当前任务完成后再试"</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.3 解析预览与发布 ===== -->
+    <h3 id="sec3-3">3.3 辅导员端 — 解析预览与发布管理</h3>
+    <h4>3.3.1 功能描述</h4>
+    <p>导员核对系统提取的结构化信息，确认无误后发布政策。</p>
+
+    <h4>3.3.2 功能细节</h4>
+    <ul>
+        <li>展示所有提取的结构化字段，低置信度橙色高亮，空值字段提示</li>
+        <li>可点击编辑、增删材料清单</li>
+        <li>确认发布或保存草稿</li>
+    </ul>
+
+    <h4>3.3.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>必填字段（项目名称、截止时间、材料清单）为空</td><td>禁止发布，提示"请完善必填信息"，具体指出哪些字段为空</td></tr>
+            <tr><td>截止时间早于当前时间</td><td>警告"截止时间已过期，请确认"，但允许强制发布（用于已过期政策的补发场景）</td></tr>
+            <tr><td>同一项目已存在生效政策</td><td>警告"旧版政策将被自动归档，是否继续？"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员编辑时自动保存草稿失败</td><td>前端显示"自动保存失败"红色提示，每30秒重试一次，允许手动保存</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员同时打开多个标签页编辑同一草稿</td><td>后保存的版本覆盖先保存的版本，并提示"另一标签页已更新此草稿"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员修改后未保存就离开页面</td><td>监听beforeunload事件，提示"有未保存的更改，确定离开？"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 截止时间恰好等于当前时间</td><td>视为有效，但提示"截止时间已到，请注意时效"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 发布后立即发现错误需要撤回</td><td>提供"撤回发布"功能（发布后30分钟内可撤回），撤回后恢复为草稿态</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 材料清单中某项材料名称超长（≥200字符）</td><td>截断至200字符，完整内容在tooltip中展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员手动输入的截止时间格式不合法</td><td>实时校验，提示"请输入正确的日期时间格式"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 多个导员同时发布同一项目政策</td><td>数据库乐观锁，后提交者收到"该政策已被其他导员更新，请刷新后重试"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 发布时 MySQL 写入成功但向量库写入失败</td><td>事务回滚，政策保持草稿态，提示"发布失败，请稍后重试"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 发布后向量库中部分chunk丢失</td><td>定时巡检任务检测向量库完整性，发现缺失自动重新向量化</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员删除材料清单中的某项，但已发布政策的已有申请正在使用该清单</td><td>旧申请仍使用旧版清单，新申请使用新版清单（版本化设计）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 项目分类选择后，导员发现分类有误</td><td>允许在发布前修改，发布后如需修改需撤回后编辑</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.3.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 发布事务执行中途数据库宕机</td><td>事务自动回滚，下次进入页面时提示"上次发布未完成，请重新操作"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 草稿保存时MySQL写入失败</td><td>前端立即提示"保存失败，请重试"，同时将草稿缓存到localStorage作为兜底</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 发布后MQ消息（通知推送）发送失败</td><td>消息进入死信队列，手动重试或定时任务自动重试</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.4 电子版初审 ===== -->
+    <h3 id="sec3-4">3.4 辅导员端 — 电子版初审</h3>
+    <h4>3.4.1 功能描述</h4>
+    <p>辅导员在线初审学生提交的电子版材料，按项目分类查看和处理。</p>
+
+    <h4>3.4.2 功能细节</h4>
+    <p>项目分类视图 → 学生申请列表 → 审核详情页（预览、下载、通过/需修正）</p>
+
+    <h4>3.4.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>待初审列表为空</td><td>显示"暂无待初审申请"，提供"查看已审记录"的入口</td></tr>
+            <tr><td>学生未上传任何材料</td><td>不进入待初审列表（"提交电子版"按钮不可用，直到至少上传一项材料）</td></tr>
+            <tr><td>导员未填写修正意见直接退回</td><td>强制要求填写意见，至少10个字符，可提供常用意见模板</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传的文件无法预览（格式损坏）</td><td>显示"文件预览不可用"，但导员仍可下载到本地查看</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员正在审核时，学生撤回了申请</td><td>页面实时提示"该申请已被学生撤回"，自动刷新列表</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员审核时网络中断，已填写的审核意见丢失</td><td>前端每30秒自动保存审核意见草稿到localStorage，恢复时弹出"恢复未提交的审核意见"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 批量初审时，部分学生合格、部分有问题</td><td>批量通过只勾选合格的学生，不合格的单独处理</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传的材料与政策要求明显不符（如传错文件）</td><td>导员可在修正意见中注明，或直接退回要求重新上传</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员误操作点了"初审通过"</td><td>提供"撤销初审"功能（操作后30分钟内），撤销后恢复为"待初审"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一学生的同一政策多次提交申请</td><td>系统自动去重，保留最新版本，旧版本标记为"已覆盖"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员审核时，另一导员已审核了该申请</td><td>页面提示"该申请已被其他导员处理"，自动刷新列表</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交的电子版材料中，部分文件能打开部分打不开</td><td>可打开的文件正常预览，打不开的文件标注"预览失败"，导员可下载尝试</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 待初审列表中学生申请超过100份</td><td>分页加载，每页20条，支持按姓名/学号搜索</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交的电子版材料超过政策要求的材料清单范围</td><td>正常显示，导员在审核时只关注清单要求的材料，多余材料可忽略</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.4.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 初审通过后，通知学生失败</td><td>通知进入重试队列，最多重试3次，仍失败则记录日志，下次学生登录时在通知中心展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 文件存储服务临时不可用，无法预览</td><td>显示"文件服务暂时不可用"，导员可选择稍后重试或直接下载</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 审核意见中包含敏感词</td><td>提示"审核意见包含敏感词，请修改后提交"</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.5 纸质版终核 ===== -->
+    <h3 id="sec3-5">3.5 辅导员端 — 纸质版终核</h3>
+    <h4>3.5.1 功能描述</h4>
+    <p>辅导员终核学生提交的纸质版材料，重点检查材料齐全性与签章合规性。</p>
+
+    <h4>3.5.2 功能细节</h4>
+    <p>（保留V1.0内容）</p>
+
+    <h4>3.5.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>纸质版缺少盖章</td><td>退回修正，注明"缺少XX单位公章"</td></tr>
+            <tr><td>纸质版缺少签名</td><td>退回修正，注明"缺少XX人签名"</td></tr>
+            <tr><td>材料不齐全</td><td>退回修正，注明"缺少XX材料"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生点击"我已提交纸质版"但实际未提交</td><td>系统记录提交时间，导员在终核时如未收到纸质版，可选择"退回，未收到纸质材料"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 纸质版材料与电子版内容不一致</td><td>退回修正，注明"纸质版与电子版不一致，请核对后重新提交"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交纸质版后长期未处理（超过5个工作日）</td><td>系统自动提醒导员"有纸质版待终核"，超过10个工作日升级提醒至校级管理员</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 纸质版有涂改痕迹</td><td>导员自行判断是否接受，如不接受退回修正并要求重新提交</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 纸质版材料页数缺失</td><td>退回修正，注明"缺少第XX页，请补充完整后提交"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交纸质版的截止时间已过</td><td>系统在"我已提交纸质版"按钮上提示"纸质版提交截止时间已过，请联系辅导员确认是否仍可提交"，导员端显示超时标记</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 纸质版中签章模糊无法辨认</td><td>退回修正，注明"签章模糊不清，请重新盖章后提交"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 终核通过后，发现漏核了某项材料</td><td>提供"撤销终核"功能（操作后30分钟内），撤销后恢复为"待终核"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员在终核时发现学生材料中使用了过期/错误的表格模板</td><td>退回修正，注明"请使用最新版表格模板，可从政策附件中下载"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生先点击了"我已提交纸质版"后，又上传了新的电子版材料</td><td>新上传的电子版材料不影响已提交的纸质版流程，但会在终核页面标注"电子版有更新"</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.5.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 终核通过后，通知校级管理员失败</td><td>通知进入重试队列，3次失败后记录日志，发送站内信给校级管理员</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 终核退回后，学生的申请状态无法正确更新</td><td>手动触发状态同步工具，或通过定时任务检测状态一致性</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.6 校级审批 ===== -->
+    <h3 id="sec3-6">3.6 校级管理员 — 最终审批</h3>
+    <h4>3.6.1 功能描述</h4>
+    <p>校级管理员对辅导员终核通过并提交上来的纸质版材料进行最终合规性审批。</p>
+
+    <h4>3.6.2 功能细节</h4>
+    <p>按项目分类 → 项目下按学院分组 → 审批详情页</p>
+
+    <h4>3.6.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>待审批列表为空</td><td>显示"暂无待审批申请"</td></tr>
+            <tr><td>审批驳回未填写理由</td><td>强制要求填写驳回理由，至少10个字符</td></tr>
+            <tr><td>同一项目下某学院无申请</td><td>该学院分组不显示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 校级管理员发现材料不在自己管辖范围内</td><td>提供"转交"功能，可选择转交给其他部门的校级管理员</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 审批通过后发现材料有问题需要撤回</td><td>提供"撤销审批"功能（操作后30分钟内），撤销后恢复为"已交校级待审批"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一项目多个校级管理员同时审批同一份申请</td><td>先审批者生效，后审批者提示"该申请已被XX管理员处理"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 校级管理员发现辅导员终核有遗漏</td><td>可选择"退回至辅导员"，注明原因，辅导员收到退回通知</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 审批通过后，学生要求撤回申请</td><td>学生联系辅导员，辅导员联系校级管理员，校级管理员手动撤回</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 某学院提交的申请数量远超其他学院</td><td>正常展示，但提供按"提交时间"排序，方便管理员优先处理较早提交的</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 校级管理员权限范围跨多个部门</td><td>支持多scope配置，管理员可查看所有管辖范围内的项目</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 批量审批时，部分合格部分不合格</td><td>只勾选合格申请，不合格的单独处理</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一学院下待审批申请超过50份</td><td>分页加载，每页20条，支持按姓名/学号搜索</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 审批通过后，系统无法自动更新申请状态</td><td>确保状态更新在事务内完成，失败时记录日志并提供手动修正入口</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 校级管理员审批时发现纸质材料已丢失</td><td>选择"审批驳回"，注明"纸质材料未收到"，退回至学生端</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.6.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 审批后通知学生失败</td><td>重试3次，失败后记录日志，学生登录时在通知中心拉取</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 审批时数据库写入超时</td><td>提示"操作超时，请重试"，检查数据库连接池状态</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.7 数据统计 ===== -->
+    <h3 id="sec3-7">3.7 辅导员端 — 数据统计看板</h3>
+    <h4>3.7.1 功能描述</h4>
+    <p>展示每个政策的统计数据，帮助导员掌握申请进度。</p>
+
+    <h4>3.7.2 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 统计数据与实际数据不一致（缓存延迟）</td><td>显示"数据更新于：XX:XX"，提供"刷新"按钮，最长缓存时间≤5分钟</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 某政策查看人数为0</td><td>显示"0"而非"暂无数据"，保持格式一致</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员切换政策时统计数据加载慢</td><td>预加载下一个政策的统计数据，切换时展示骨架屏</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 统计数字过大（如查看人数≥10000）</td><td>显示为"1.0万"格式</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员同时查看多个政策的统计</td><td>支持多选政策并对比展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 有学生提交了申请但导员未发布政策（测试数据）</td><td>统计数据只统计已发布政策下的申请，未发布政策相关数据不展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员导出统计报告时数据量过大</td><td>异步导出，后台生成Excel，完成后通知导员下载</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 统计看板中"待初审人数"与"已提交电子版人数"逻辑关系异常（如待初审＞已提交）</td><td>数据异常时在对应指标旁显示⚠️标记，提示"数据异常，请联系管理员"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 导员查看统计时，有新的申请提交</td><td>统计数据不实时更新（避免频繁刷新），但显示"有新数据"提示条</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.8 学生看板 ===== -->
+    <h3 id="sec3-8">3.8 学生端 — 综合信息看板</h3>
+    <h4>3.8.1 功能描述</h4>
+    <p>学生登录后默认进入信息看板，展示可申请的政策卡片列表。</p>
+
+    <h4>3.8.2 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>无可申请政策</td><td>显示"暂无符合条件的政策"，建议联系辅导员或查看已归档政策</td></tr>
+            <tr><td>政策已过期</td><td>不显示在看板中，但可在"已归档"分类中查看</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生同时符合多个政策条件（如跨年级政策）</td><td>看板显示所有符合条件的政策，按截止时间由近及远排序</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 政策发布时间与学生看板刷新存在延迟</td><td>看板每次加载时从后端拉取最新数据，最长缓存30秒</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生更换学院/年级后，看板内容未及时更新</td><td>下次登录时重新计算，如果跨学院转系，需管理员手动更新用户信息</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 看板数据加载失败</td><td>显示"加载失败"提示，提供重试按钮，缓存上次成功加载的数据作为降级展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生看到政策时距离截止时间不足1分钟</td><td>倒计时精确到秒，显示"即将截止（剩余XX秒）"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 政策截止时间恰好是午夜（00:00）</td><td>明确显示日期和时间，避免歧义，倒计时精确到秒</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 看板中政策卡片数量超过50个</td><td>分页加载，每页20条，提供搜索和筛选功能</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生同时有进行中的申请和可申请的新政策</td><td>看板顶部展示"进行中的申请"摘要，下方展示可申请的新政策</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 政策发布时未设置适用年级（全年级适用）</td><td>education_level 设为"全校"，applicable_grades 设为空数组，所有学生可见</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生学历为"博士"但政策只适用于"本科"</td><td>系统自动过滤，不在看板中展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 政策发布后，学生的年级信息发生变化（如升入高一年级）</td><td>下次登录时重新计算政策匹配，部分政策可能变为不可见</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 看板中政策卡片显示"已申请"状态但实际申请已被撤销</td><td>状态与实际申请状态同步，撤销后卡片恢复为"可申请"</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.9 智能问答Agent ===== -->
+    <h3 id="sec3-9">3.9 学生端 — 智能问答 Agent</h3>
+    <h4>3.9.1 功能描述</h4>
+    <p>基于RAG的智能问答助手，回答政策相关问题。</p>
+
+    <h4>3.9.2 功能细节</h4>
+    <ul>
+        <li>入口：看板右下角悬浮对话框</li>
+        <li>支持多轮对话与上下文记忆（最多10轮）</li>
+        <li>事实性回答必须标注来源</li>
+        <li>材料相关问题时主动引导添加进度跟踪</li>
+    </ul>
+
+    <h4>3.9.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>问题与政策无关</td><td>回复"未找到相关信息，建议联系辅导员确认"</td></tr>
+            <tr><td>多轮对话超过10轮</td><td>提示"如需继续咨询，请重新提问"，清除历史上下文</td></tr>
+            <tr><td>工具调用超过5步</td><td>强制转人工提示</td></tr>
+            <tr><td>工具调用超过3秒无返回</td><td>触发兜底话术，告知用户稍后重试</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Agent回答与政策原文有偏差（幻觉）</td><td>设置"有帮助/没帮助"反馈按钮，收集用户反馈，定期评估幻觉率（目标≤3%）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生连续快速提问（1秒内多次提问）</td><td>前端防抖，仅发送最后一次提问；后端限流，单用户每分钟≤20次</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生问题涉及多个政策</td><td>Agent自动识别并分别检索，在回答中分点标注各政策来源</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Agent推理过程中，被引用的政策被更新/删除</td><td>Agent使用检索时的快照版本，不实时同步，在回答尾部标注"检索时间：XX:XX"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生问题表述模糊，无法匹配任何政策</td><td>Agent反问澄清需求，如"您想问的是哪个政策？可以告诉我具体的项目名称"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生用英文提问</td><td>系统优先中文知识库，如果检索不到结果，提示"暂不支持英文查询，请用中文提问"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 对话历史过长导致Token超限</td><td>自动丢弃最早的部分对话，保留最近5轮，在学生无感知的情况下进行</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生关闭浏览器后重新打开，对话历史是否保留</td><td>对话历史保存在Session中，关闭浏览器后丢失（不持久化，保护隐私）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提问包含敏感词</td><td>提示"请勿输入敏感信息"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> LLM返回内容包含Markdown格式问题</td><td>前端安全渲染Markdown，过滤危险HTML标签，防止XSS</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Agent同时被大量学生使用（并发压力）</td><td>Dify侧配置并发上限，超限时排队等待，前端提示"当前咨询人数较多，请稍候"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提问涉及内部审批流程而非政策内容</td><td>Agent判断为流程问题，给出引导："请查看您的申请进度面板，或联系辅导员了解具体审批进度"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提问"我要申请XX"时，该政策已截止</td><td>Agent回复"该政策已截止，建议您关注其他类似政策"，并推荐相关可申请政策</td></tr>
+            <tr><td><span class="edge-badge">边界</span> LLM服务不可用时的降级策略</td><td>降级为纯关键词检索，返回相关文档片段，标注"当前为精简模式"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提问"什么时候截止"但未指定具体政策</td><td>Agent反问"您想问的是哪个项目的截止时间？"或列出学生正在进行的申请</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Agent回答中来源标注对应的政策在学生端已不可见</td><td>不影响回答展示，但可在来源旁标注"该政策已归档"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提问包含URL或附件</td><td>忽略URL和附件内容，仅处理纯文本部分</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.9.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 向量检索服务超时</td><td>降级为BM25关键词检索，结果可能不如混合检索精确，但保证可用</td></tr>
+            <tr><td><span class="edge-badge">边界</span> Dify平台返回非预期格式</td><td>捕获异常，提示"服务响应异常，请重新提问"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 工具调用链出现循环依赖</td><td>设置最大工具调用步数（5步），超出后强制转人工提示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交的反馈（有帮助/没帮助）写入失败</td><td>不影响主流程，记录日志，后续通过定时任务补偿</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.10 进度跟踪 ===== -->
+    <h3 id="sec3-10">3.10 学生端 — 申请进度跟踪器</h3>
+    <h4>3.10.1 功能描述</h4>
+    <p>学生启动申请后，系统提供全流程进度跟踪面板。</p>
+
+    <h4>3.10.2 功能细节</h4>
+    <p>（保留V1.0内容：启动、材料清单、逐项上传、状态流转）</p>
+
+    <h4>3.10.3 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>材料清单为空</td><td>显示"该政策暂无材料清单，请联系辅导员确认"</td></tr>
+            <tr><td>未上传任何材料点击提交</td><td>提示"请至少上传一项材料"</td></tr>
+            <tr><td>部分材料未上传点击提交</td><td>提示"以下材料尚未上传：[列表]，确认提交？"，允许二次确认后提交</td></tr>
+            <tr><td>文件格式不正确</td><td>提示"仅支持PDF、JPG、PNG格式"</td></tr>
+            <tr><td>文件超过5MB</td><td>提示"文件过大，请压缩后上传"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生同时申请多个项目</td><td>每个项目独立进度跟踪，在"我的申请"列表中分组展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传材料后，发现传错了文件</td><td>在"准备中"状态下，允许删除已上传文件并重新上传</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交电子版后，发现漏了材料</td><td>在"待初审"状态下，学生不能自行撤回，需联系辅导员退回</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交电子版后，辅导员已开始审核，此时学生要求撤回</td><td>学生联系辅导员，辅导员可选择"退回"（退回后状态变为"需修正"）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生点击"我已提交纸质版"后，辅导员实际未收到</td><td>提供"撤销提交纸质版"功能，撤销后学生可重新提交</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 申请状态异常跳转（如从"待初审"直接到"已完成"）</td><td>系统校验状态流转合法性，非法流转被拒绝，记录日志</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生申请后，政策被辅导员删除/归档</td><td>进行中的申请不受影响，但政策归档后学生无法查看政策详情</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生毕业/休学后，进行中的申请如何处理</td><td>账号状态变更后，进行中的申请由辅导员手动处理（撤销或转交）</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 申请截止时间已过，学生能否继续提交</td><td>超过截止时间，上传入口禁用，显示"提交已截止"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 材料清单中的材料名称与政策原文不一致</td><td>以辅导员发布时确认的版本为准</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生长时间停留在"准备中"状态（超过截止时间）</td><td>系统在截止时间前3天、1天、6小时分别发送提醒通知</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传的文件名包含敏感信息</td><td>上传时自动检测，提示"文件名可能包含个人信息，建议重命名后上传"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生在"初审通过"后，未点击"我已提交纸质版"就线下提交了纸质版</td><td>导员可在终核页面看到该生已初审通过但未确认提交，系统显示"学生已初审通过，待确认纸质版提交"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传材料时，某项材料要求上传多份文件</td><td>每项材料支持上传多个文件（最多5个/项），列表中显示文件数量</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 进度跟踪面板中，前一状态尚未完成但后一状态的操作已可用</td><td>状态流转受严格限制，后一状态的操作按钮不可用，鼠标悬停提示"请先完成上一步"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生申请处于"需修正"状态，但未在截止日期前完成修正</td><td>截止时间后，修正入口关闭，状态变为"已过期"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传的网络文件（如网盘链接）而非本地文件</td><td>不支持，仅接受本地文件上传</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 材料清单中有"其他"或"补充材料"等无固定名称的项</td><td>允许学生自定义上传文件的标注说明</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生反复提交/撤回申请（频繁操作）</td><td>设置操作频率限制，同一申请每分钟最多操作3次</td></tr>
+        </tbody>
+    </table>
+
+    <h4>3.10.4 异常处理</h4>
+    <table>
+        <thead><tr><th>异常</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 文件上传至一半时存储服务宕机</td><td>前端显示"上传失败"，保留已上传的部分，支持断点续传</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生提交电子版后，状态更新失败</td><td>提示"提交失败，请稍后重试"，检查是否所有材料已上传</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 申请时间线事件写入失败</td><td>不影响主流程，异步重试写入，最多重试5次</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生上传的文件在存储后被误删</td><td>后台定时任务检测文件完整性，发现缺失从备份恢复</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.11 收藏 ===== -->
+    <h3 id="sec3-11">3.11 学生端 — 政策收藏</h3>
+    <h4>3.11.1 功能描述</h4>
+    <p>学生可收藏感兴趣的政策，便于快速查阅。</p>
+
+    <h4>3.11.2 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 收藏的政策被删除/归档</td><td>收藏列表中显示"该政策已归档"，灰色展示，不可点击详情</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 收藏数量超过上限（暂定200条）</td><td>提示"收藏已达上限，请取消部分收藏后再试"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 重复收藏同一政策</td><td>第二次点击等于取消收藏（toggle模式），或提示"该政策已在收藏列表中"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 收藏列表为空</td><td>显示"暂无收藏，在政策详情页点击❤️即可收藏"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 收藏时网络断开</td><td>前端乐观更新UI，后台请求失败时回滚并提示"网络异常，收藏失败"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 收藏的政策即将截止</td><td>收藏列表中标红提示"即将截止"，并显示剩余天数</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生取消收藏后数据未真正删除</td><td>软删除，标记is_deleted=1，保留记录用于后期分析</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ===== 3.12 🆕 通知系统 ===== -->
+    <h3 id="sec3-12">3.12 🆕 通知系统</h3>
+    <h4>3.12.1 功能描述</h4>
+    <p>系统内部通知系统，在关键节点向用户推送状态变更提醒。</p>
+
+    <h4>3.12.2 边界条件</h4>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td><span class="edge-badge">边界</span> 通知推送时目标用户不在线</td><td>通知存入数据库，下次用户登录时在通知中心展示</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 未读通知数量超过99</td><td>显示"99+"，不展示具体数字</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 同一事件多次触发（如多次点击"通过"）</td><td>幂等性设计，同一事件只生成一条通知</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 批量操作生成大量通知</td><td>合并为一条通知，如"您有5份申请已通过初审"</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 通知内容中包含敏感信息</td><td>通知内容只展示摘要，详情需跳转到应用中查看</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 通知中心加载失败</td><td>显示"通知加载失败"，不影响页面其他功能</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 通知超过30天未读</td><td>自动标记为"已过期"，不再展示在通知中心</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 学生点击通知跳转后，对应申请已被删除</td><td>显示"该申请已不存在"，回到通知列表</td></tr>
+            <tr><td><span class="edge-badge">边界</span> 全量标记已读操作，部分通知标记失败</td><td>分批处理，每批100条，失败记录日志</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第4章 🆕 全局边界条件矩阵 -->
+    <!-- ================================================================ -->
+    <h2 id="ch4">第4章 🆕 全局边界条件矩阵</h2>
+    <p>以下为跨模块的通用边界条件，各模块统一遵守。</p>
+
+    <h3>4.1 时间相关边界</h3>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>截止时间精确到秒</td><td>所有时间字段均精确到秒，倒计时同步展示</td></tr>
+            <tr><td>系统时间被修改（手动调整服务器时间）</td><td>所有时间操作以数据库服务器时间为准，前端时间仅作展示</td></tr>
+            <tr><td>前端与后端时间不同步</td><td>后端返回时间戳，前端转换为本地时间展示，倒计时以服务器时间为基准</td></tr>
+            <tr><td>跨时区使用</td><td>首期仅支持北京时间（UTC+8），所有时间存储和展示均使用北京时间</td></tr>
+            <tr><td>闰年/2月29日</td><td>全部使用标准库处理日期，不手动计算</td></tr>
+            <tr><td>夏令时切换</td><td>中国不实行夏令时，暂时不考虑</td></tr>
+            <tr><td>操作时间精确到毫秒</td><td>审计日志中时间精确到毫秒，业务时间精确到秒</td></tr>
+            <tr><td>并发操作的时间先后</td><td>以数据库写入时间为准，不依赖前端时间戳</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.2 数据量相关边界</h3>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>某学院学生数量极大（如5000+）</td><td>列表分页加载，每页20条，支持搜索过滤</td></tr>
+            <tr><td>某政策申请数量极大（如1000+）</td><td>导员端按项目分类聚合展示，支持搜索和筛选</td></tr>
+            <tr><td>数据库表数据量过大（如百万级audit_logs）</td><td>按月分表，定期归档历史数据</td></tr>
+            <tr><td>向量库中chunk数量过多</td><td>按政策ID分区，检索时先过滤再检索</td></tr>
+            <tr><td>文件存储空间不足</td><td>监控磁盘使用率，超过80%预警，90%告警</td></tr>
+            <tr><td>单用户上传文件总大小超过配额</td><td>辅导员：每个政策≤20MB；学生：每个申请≤50MB</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.3 网络与设备边界</h3>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>网络不稳定（请求频繁超时）</td><td>前端自动重试最多3次，指数退避</td></tr>
+            <tr><td>网络完全断开</td><td>显示"网络连接已断开"，保留当前页面可读，恢复后自动重连</td></tr>
+            <tr><td>浏览器兼容性（Chrome/Edge/其他）</td><td>首期支持Chrome和Edge最新版，其他浏览器不做保证</td></tr>
+            <tr><td>浏览器禁用Cookie</td><td>使用Token替代Cookie-based Session</td></tr>
+            <tr><td>浏览器禁用JavaScript</td><td>提示"请启用JavaScript以使用本系统"</td></tr>
+            <tr><td>屏幕分辨率过小（&lt; 1024px）</td><td>提示"建议使用更大屏幕访问"，但页面仍可操作</td></tr>
+            <tr><td>浏览器标签页被休眠</td><td>恢复时重新请求数据，刷新页面状态</td></tr>
+            <tr><td>用户使用IE浏览器</td><td>提示"请使用Chrome或Edge浏览器"</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.4 输入校验边界</h3>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>所有用户输入长度超限</td><td>前端限制输入长度，后端二次校验，超限时截断或拒绝</td></tr>
+            <tr><td>所有用户输入包含XSS攻击代码</td><td>输出时转义HTML特殊字符，不存储原始HTML</td></tr>
+            <tr><td>所有用户输入包含SQL注入代码</td><td>使用ORM参数化查询，禁用原生SQL拼接</td></tr>
+            <tr><td>所有用户输入包含特殊Unicode字符</td><td>正常存储和展示，但搜索时做归一化处理</td></tr>
+            <tr><td>所有用户输入为纯空格</td><td>trim后为空则视为无效输入</td></tr>
+            <tr><td>所有用户输入包含emoji</td><td>数据库使用utf8mb4字符集，支持emoji存储</td></tr>
+            <tr><td>文件上传：MIME类型与实际内容不符</td><td>MIME类型 + 魔数双重校验，双重不一致则拒绝</td></tr>
+            <tr><td>文件上传：文件名包含路径遍历（../）</td><td>过滤"../"和"..\"等路径穿越字符</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.5 第三方服务依赖边界</h3>
+    <table>
+        <thead><tr><th>场景</th><th>处理方式</th></tr></thead>
+        <tbody>
+            <tr><td>LLM API限流（Rate Limit）</td><td>请求排队，等待后重试，前端显示"服务繁忙，请稍后"</td></tr>
+            <tr><td>LLM API费用超预算</td><td>设置日调用上限，超限时降级或提示</td></tr>
+            <tr><td>LLM API返回空或错误</td><td>重试最多3次，仍失败则标记为"未识别"</td></tr>
+            <tr><td>MinerU服务OOM</td><td>自动重启，失败任务加入重试队列</td></tr>
+            <tr><td>Dify服务不可用</td><td>Agent降级为关键词检索，其他功能不受影响</td></tr>
+            <tr><td>向量数据库连接超时</td><td>重试3次，失败后降级为纯关键词检索</td></tr>
+            <tr><td>对象存储服务不可用（MinIO宕机）</td><td>上传功能暂停，已上传文件可读（只读模式）</td></tr>
+            <tr><td>Redis宕机</td><td>Session降级为数据库存储，缓存功能降级，限流功能降级</td></tr>
+            <tr><td>MySQL主从延迟</td><td>写操作走主库，读操作允许从库延迟（最终一致性），关键读操作强制走主库</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第5章 🆕 并发与冲突场景 -->
+    <!-- ================================================================ -->
+    <h2 id="ch5">第5章 🆕 并发与冲突场景</h2>
+
+    <h3>5.1 并发场景矩阵</h3>
+    <table>
+        <thead><tr><th>并发场景</th><th>冲突类型</th><th>解决方案</th></tr></thead>
+        <tbody>
+            <tr><td>多个导员同时编辑同一政策草稿</td><td>写写冲突</td><td>乐观锁（version字段），后提交者提示"已被其他导员修改，请刷新"</td></tr>
+            <tr><td>导员审核时，学生撤回申请</td><td>读写冲突</td><td>导员端实时轮询（或WebSocket）状态变更，提交时二次校验状态有效性</td></tr>
+            <tr><td>导员初审时，其他导员已初审该申请</td><td>写写冲突</td><td>数据库行锁，已审核的申请不可再审核</td></tr>
+            <tr><td>学生同时提交多个材料</td><td>写写冲突</td><td>每个材料独立上传，事务隔离</td></tr>
+            <tr><td>批量审批时，部分申请已被其他人处理</td><td>部分失败</td><td>逐条处理，已处理的跳过，未处理的正常处理，返回处理结果汇总</td></tr>
+            <tr><td>学生提交电子版时，政策被归档</td><td>读写冲突</td><td>提交时校验政策状态，已归档则拒绝提交</td></tr>
+            <tr><td>统计看板数据与实时数据不一致</td><td>读写冲突</td><td>统计数据使用缓存/预计算，允许最多5分钟延迟</td></tr>
+            <tr><td>多个学生同时申请同一项目</td><td>无直接冲突</td><td>各自独立申请，互不影响</td></tr>
+            <tr><td>导员发布政策时，学生正在查看看板</td><td>读写冲突</td><td>看板下次刷新时自动展示新政策，无需实时同步</td></tr>
+            <tr><td>系统管理员导出数据时，数据正在被修改</td><td>读写冲突</td><td>导出使用快照读（SELECT ... FOR UPDATE 或事务隔离级别）</td></tr>
+            <tr><td>同一学生同一政策重复提交申请</td><td>数据重复</td><td>唯一索引（user_id + policy_id），防止重复</td></tr>
+            <tr><td>通知批量推送时，大量用户同时在线</td><td>并发推送</td><td>消息队列削峰填谷，异步推送</td></tr>
+        </tbody>
+    </table>
+
+    <h3>5.2 乐观锁设计</h3>
+    <p>对于存在写冲突的核心资源，使用乐观锁机制：</p>
+    <div class="highlight-box">
+        <strong>乐观锁实现方案</strong><br>
+        1. 在 <code>policies</code> 表增加 <code>version</code> 字段（INT，默认1）<br>
+        2. 读取时获取 version<br>
+        3. 更新时校验 version = 读取时的值<br>
+        4. 更新时 version + 1<br>
+        5. 如果影响行数为0，说明已被其他事务修改，提示冲突<br><br>
+        <strong>受影响表</strong>：policies, policy_metadata, user_applications
+    </div>
+
+    <h3>5.3 分布式锁场景</h3>
+    <table>
+        <thead><tr><th>场景</th><th>锁粒度</th><th>实现方式</th></tr></thead>
+        <tbody>
+            <tr><td>同一政策发布</td><td>policy_id</td><td>Redis SETNX，过期时间30秒</td></tr>
+            <tr><td>同一学生同一政策申请</td><td>user_id + policy_id</td><td>数据库唯一索引（天然互斥）</td></tr>
+            <tr><td>文档解析任务调度</td><td>上传文件ID</td><td>Redis SETNX，过期时间10分钟</td></tr>
+            <tr><td>定时任务（如提醒通知）</td><td>任务名称</td><td>Redis分布式锁，防止多实例重复执行</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第6章 🆕 状态异常恢复 -->
+    <!-- ================================================================ -->
+    <h2 id="ch6">第6章 🆕 状态异常恢复</h2>
+
+    <h3>6.1 状态异常场景</h3>
+    <table>
+        <thead><tr><th>异常状态</th><th>可能原因</th><th>恢复策略</th></tr></thead>
+        <tbody>
+            <tr><td>申请状态卡在"待初审"超过7天</td><td>导员未处理</td><td>系统自动发送提醒给导员，15天后升级提醒至校级管理员</td></tr>
+            <tr><td>申请状态卡在"待终核"超过10天</td><td>导员未收到纸质版或未处理</td><td>系统自动提醒导员，15天后升级提醒至校级管理员</td></tr>
+            <tr><td>申请状态卡在"已交校级待审批"超过15天</td><td>校级管理员未处理</td><td>系统自动提醒校级管理员，20天后升级提醒至超级管理员</td></tr>
+            <tr><td>申请状态为"需修正"但超过截止时间</td><td>学生未及时修正</td><td>状态自动变为"已过期"</td></tr>
+            <tr><td>申请状态为"准备中"但超过截止时间</td><td>学生未及时提交</td><td>状态自动变为"已过期"</td></tr>
+            <tr><td>政策为"已发布"但截止时间已过</td><td>政策到期</td><td>定时任务自动将政策状态改为"已归档"</td></tr>
+            <tr><td>申请状态显示"已完成"但实际校级审批未通过</td><td>数据异常</td><td>后台提供手动修正状态工具，供管理员使用</td></tr>
+            <tr><td>用户账号状态异常（如is_first_login与实际情况不符）</td><td>数据不一致</td><td>登录时自动校验并修正</td></tr>
+            <tr><td>通知推送失败导致状态不一致</td><td>消息丢失</td><td>定时任务扫描异常状态，补发通知</td></tr>
+            <tr><td>文件上传成功但数据库记录未更新</td><td>事务部分失败</td><td>定时任务扫描上传目录与数据库记录，修复不一致</td></tr>
+        </tbody>
+    </table>
+
+    <h3>6.2 状态自动修复策略</h3>
+    <div class="highlight-box info">
+        <strong>定时修复任务（每日凌晨3:00执行）</strong><br>
+        1. 扫描所有状态异常的申请记录<br>
+        2. 扫描所有已过期的政策<br>
+        3. 扫描文件存储与数据库记录的完整性<br>
+        4. 扫描通知记录的一致性<br>
+        5. 生成异常报告，通知管理员<br>
+        <br>
+        <strong>自动修复规则</strong>：<br>
+        - 超过截止时间 + 状态为"准备中" → 自动标记为"已过期"<br>
+        - 超过截止时间 + 状态为"需修正" → 自动标记为"已过期"<br>
+        - 政策截止时间已过 + 状态为"已发布" → 自动标记为"已归档"<br>
+        - 申请状态为"已完成"但缺少校级审批记录 → 标记为"异常"，通知管理员人工处理
+    </div>
+
+    <h3>6.3 手动修正工具</h3>
+    <p>为管理员提供申请状态手动修正界面：</p>
+    <ul>
+        <li>搜索申请（按学号、申请ID、政策名称）</li>
+        <li>查看当前状态和状态流转历史</li>
+        <li>手动变更状态（记录操作日志，标注为"管理员手动修正"）</li>
+        <li>变更时自动校验状态流转合法性</li>
+        <li>变更后自动通知相关用户</li>
+    </ul>
+
+    <h3>6.4 幂等性设计</h3>
+    <table>
+        <thead><tr><th>操作</th><th>幂等实现方案</th></tr></thead>
+        <tbody>
+            <tr><td>提交电子版材料</td><td>禁止重复提交，已提交状态不可再次提交</td></tr>
+            <tr><td>初审通过/退回</td><td>检测当前状态，只有"待初审"状态可操作</td></tr>
+            <tr><td>终核通过/退回</td><td>检测当前状态，只有"待终核"状态可操作</td></tr>
+            <tr><td>校级审批通过/驳回</td><td>检测当前状态，只有"已交校级待审批"状态可操作</td></tr>
+            <tr><td>发布政策</td><td>已发布政策不可再次发布，需先撤回</td></tr>
+            <tr><td>收藏政策</td><td>已收藏再次点击等于取消收藏（toggle）</td></tr>
+            <tr><td>通知推送</td><td>同一事件不重复推送，使用事件ID去重</td></tr>
+            <tr><td>文件上传</td><td>同一文件（MD5相同）在上传时提示"已存在同名文件，是否覆盖"</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第7章 数据模型（新增边界相关字段） -->
+    <!-- ================================================================ -->
+    <h2 id="ch7">第7章 数据模型设计</h2>
+
+    <h3>7.1 🆕 增强字段说明</h3>
+    <p>以下为V1.5新增字段，用于支持边界场景处理：</p>
+
+    <table>
+        <thead><tr><th>表名</th><th>新增字段</th><th>类型</th><th>说明</th><th>对应边界场景</th></tr></thead>
+        <tbody>
+            <tr><td>users</td><td>last_login</td><td>DATETIME</td><td>最后登录时间</td><td>登录历史</td></tr>
+            <tr><td>users</td><td>login_attempts</td><td>INT</td><td>连续登录失败次数</td><td>账号锁定</td></tr>
+            <tr><td>users</td><td>locked_until</td><td>DATETIME</td><td>锁定截止时间</td><td>账号锁定</td></tr>
+            <tr><td>users</td><td>is_first_login</td><td>TINYINT</td><td>是否首次登录</td><td>强改密码</td></tr>
+            <tr><td>users</td><td>is_active</td><td>TINYINT</td><td>账号是否激活</td><td>账号禁用</td></tr>
+            <tr><td>policies</td><td>version</td><td>INT</td><td>乐观锁版本号</td><td>并发冲突</td></tr>
+            <tr><td>policies</td><td>file_md5</td><td>VARCHAR(64)</td><td>源文件MD5值</td><td>重复上传检测</td></tr>
+            <tr><td>user_applications</td><td>version</td><td>INT</td><td>乐观锁版本号</td><td>并发冲突</td></tr>
+            <tr><td>user_applications</td><td>expired_at</td><td>DATETIME</td><td>申请过期时间</td><td>超时自动过期</td></tr>
+            <tr><td>application_materials</td><td>file_md5</td><td>VARCHAR(64)</td><td>文件MD5值</td><td>文件校验</td></tr>
+            <tr><td>application_materials</td><td>reject_reason</td><td>TEXT</td><td>材料被退回的原因</td><td>材料退回</td></tr>
+            <tr><td>notifications</td><td>event_id</td><td>VARCHAR(64)</td><td>事件唯一ID（幂等）</td><td>通知去重</td></tr>
+            <tr><td>audit_logs</td><td>ip_address</td><td>VARCHAR(45)</td><td>操作人IP</td><td>审计追踪</td></tr>
+            <tr><td>audit_logs</td><td>user_agent</td><td>VARCHAR(500)</td><td>操作人设备信息</td><td>审计追踪</td></tr>
+        </tbody>
+    </table>
+
+    <h3>7.2 🆕 新增表：application_timeline（申请时间线）</h3>
+    <table>
+        <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>timeline_id</td><td>INT</td><td>PK AUTO_INCREMENT</td><td>时间线ID</td></tr>
+            <tr><td>application_id</td><td>INT</td><td>FK NOT NULL</td><td>申请ID</td></tr>
+            <tr><td>event_type</td><td>VARCHAR(50)</td><td>NOT NULL</td><td>事件类型（参见枚举）</td></tr>
+            <tr><td>event_detail</td><td>TEXT</td><td>NULL</td><td>事件详情</td></tr>
+            <tr><td>operator_name</td><td>VARCHAR(50)</td><td>NULL</td><td>操作人姓名</td></tr>
+            <tr><td>operator_role</td><td>VARCHAR(20)</td><td>NULL</td><td>操作人角色</td></tr>
+            <tr><td>is_auto</td><td>TINYINT</td><td>DEFAULT 0</td><td>是否为系统自动操作</td></tr>
+            <tr><td>created_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>操作时间</td></tr>
+            <tr><td colspan="4"><em>索引：INDEX(application_id), INDEX(created_at)</em></td></tr>
+        </tbody>
+    </table>
+
+    <h3>7.3 🆕 新增表：system_config</h3>
+    <table>
+        <thead><tr><th>字段名</th><th>类型</th><th>约束</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>config_id</td><td>INT</td><td>PK AUTO_INCREMENT</td><td>配置ID</td></tr>
+            <tr><td>config_key</td><td>VARCHAR(100)</td><td>UNIQUE NOT NULL</td><td>配置键</td></tr>
+            <tr><td>config_value</td><td>TEXT</td><td>NOT NULL</td><td>配置值</td></tr>
+            <tr><td>description</td><td>VARCHAR(200)</td><td>NULL</td><td>配置说明</td></tr>
+            <tr><td>updated_at</td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP ON UPDATE</td><td>更新时间</td></tr>
+        </tbody>
+    </table>
+    <p><strong>示例配置项</strong>：</p>
+    <table>
+        <thead><tr><th>config_key</th><th>config_value</th><th>description</th></tr></thead>
+        <tbody>
+            <tr><td>session_timeout_minutes</td><td>30</td><td>会话超时时间（分钟）</td></tr>
+            <tr><td>login_lock_threshold</td><td>5</td><td>登录锁定阈值（次数）</td></tr>
+            <tr><td>login_lock_minutes</td><td>15</td><td>登录锁定时间（分钟）</td></tr>
+            <tr><td>max_favorites</td><td>200</td><td>收藏数量上限</td></tr>
+            <tr><td>auto_archive_days</td><td>1</td><td>政策截止后几天自动归档</td></tr>
+            <tr><td>review_timeout_days</td><td>7</td><td>初审超时提醒天数</td></tr>
+            <tr><td>final_review_timeout_days</td><td>10</td><td>终核超时提醒天数</td></tr>
+            <tr><td>admin_review_timeout_days</td><td>15</td><td>校级审批超时提醒天数</td></tr>
+            <tr><td>notification_retention_days</td><td>30</td><td>通知保留天数</td></tr>
+            <tr><td>max_file_size_upload</td><td>20971520</td><td>上传文件大小限制（字节）</td></tr>
+            <tr><td>max_file_size_material</td><td>5242880</td><td>材料文件大小限制（字节）</td></tr>
+            <tr><td>llm_confidence_threshold</td><td>0.8</td><td>LLM提取置信度阈值</td></tr>
+            <tr><td>enable_auto_archive</td><td>true</td><td>是否启用自动归档</td></tr>
+            <tr><td>enable_virus_scan</td><td>true</td><td>是否启用病毒扫描</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第8章 技术选型 -->
+    <!-- ================================================================ -->
+    <h2 id="ch8">第8章 技术选型及理由</h2>
+    <p>（保留V1.0技术选型）</p>
+
+    <h3>8.1 🆕 边界场景相关技术选型</h3>
+    <table>
+        <thead><tr><th>边界场景</th><th>技术方案</th></tr></thead>
+        <tbody>
+            <tr><td>并发冲突</td><td>乐观锁（version字段）+ 数据库唯一索引</td></tr>
+            <tr><td>分布式锁</td><td>Redis SETNX</td></tr>
+            <tr><td>消息队列削峰</td><td>Redis List / Celery</td></tr>
+            <tr><td>定时任务（状态自动修复）</td><td>APScheduler / Celery Beat</td></tr>
+            <tr><td>文件MD5校验</td><td>Python hashlib.md5</td></tr>
+            <tr><td>病毒扫描</td><td>ClamAV</td></tr>
+            <tr><td>API限流</td><td>Redis + 令牌桶算法</td></tr>
+            <tr><td>前端防抖/节流</td><td>lodash debounce / throttle</td></tr>
+            <tr><td>自动保存草稿</td><td>localStorage + 定时器</td></tr>
+            <tr><td>断点续传</td><td>分片上传 + 分片记录</td></tr>
+            <tr><td>幂等性</td><td>唯一ID + 去重表</td></tr>
+            <tr><td>数据一致性检测</td><td>定时任务扫描 + 补偿机制</td></tr>
+            <tr><td>降级开关</td><td>system_config配置表 + 配置中心</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 第9章 分阶段开发计划 -->
+    <!-- ================================================================ -->
+    <h2 id="ch9">第9章 分阶段开发计划</h2>
+
+    <h3>9.1 🆕 边界场景开发优先级</h3>
+    <table>
+        <thead><tr><th>边界场景</th><th>所属模块</th><th>优先级</th><th>建议阶段</th></tr></thead>
+        <tbody>
+            <tr><td>账号锁定（5次失败）</td><td>用户认证</td><td>P0</td><td>阶段1</td></tr>
+            <tr><td>Session超时自动退出</td><td>用户认证</td><td>P0</td><td>阶段1</td></tr>
+            <tr><td>文件格式/大小校验</td><td>文档上传</td><td>P0</td><td>阶段2</td></tr>
+            <tr><td>LLM提取失败降级</td><td>文档解析</td><td>P0</td><td>阶段2</td></tr>
+            <tr><td>发布事务回滚</td><td>发布管理</td><td>P0</td><td>阶段3</td></tr>
+            <tr><td>状态流转合法性校验</td><td>进度跟踪</td><td>P0</td><td>阶段5</td></tr>
+            <tr><td>并发冲突（乐观锁）</td><td>全局</td><td>P0</td><td>阶段5</td></tr>
+            <tr><td>文件上传网络中断</td><td>文档上传/材料上传</td><td>P1</td><td>阶段2+5</td></tr>
+            <tr><td>重复文件检测（MD5）</td><td>文档上传</td><td>P1</td><td>阶段2</td></tr>
+            <tr><td>未保存编辑离开页面提示</td><td>解析预览</td><td>P1</td><td>阶段3</td></tr>
+            <tr><td>撤回发布/撤销审核</td><td>审核/发布</td><td>P1</td><td>阶段6</td></tr>
+            <tr><td>Agent降级策略</td><td>智能问答</td><td>P1</td><td>阶段4</td></tr>
+            <tr><td>自动保存草稿</td><td>解析预览</td><td>P1</td><td>阶段3</td></tr>
+            <tr><td>超时自动归档</td><td>全局</td><td>P1</td><td>阶段6</td></tr>
+            <tr><td>第三方服务降级</td><td>全局</td><td>P1</td><td>阶段4</td></tr>
+            <tr><td>前端防抖/限流</td><td>全局</td><td>P1</td><td>阶段4</td></tr>
+            <tr><td>API限流</td><td>全局</td><td>P1</td><td>阶段6</td></tr>
+            <tr><td>病毒扫描</td><td>文件上传</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>断点续传</td><td>文件上传</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>状态自动修复定时任务</td><td>全局</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>多设备登录冲突检测</td><td>用户认证</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>批量操作（批量初审/审批）</td><td>审核/审批</td><td>P2</td><td>阶段6</td></tr>
+            <tr><td>通知超时升级提醒</td><td>通知系统</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>手动修正状态工具</td><td>全局</td><td>P2</td><td>阶段7</td></tr>
+            <tr><td>文件存储一致性检测</td><td>全局</td><td>P2</td><td>阶段7</td></tr>
+        </tbody>
+    </table>
+
+    <div class="highlight-box info">
+        <strong>📌 开发建议</strong>：P0边界场景必须在对应功能模块开发时同步完成；P1边界场景建议在功能开发后1-2个迭代内完成；P2边界场景可在所有功能开发完成后统一处理。
+    </div>
+
+    <div class="footer-note">
+        <p>PRD V1.5 边界增强版 — 重点补充了各模块的边界条件、异常场景、并发冲突和状态恢复策略。</p>
+        <p style="margin-top:4px; font-size:13px; color:#94a3b8;">—— 文档结束 ——</p>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                'primaryColor': '#2563eb',
+                'primaryTextColor': '#0a1e3c',
+                'primaryBorderColor': '#2563eb',
+                'lineColor': '#94a3b8',
+                'secondaryColor': '#f1f5f9',
+                'tertiaryColor': '#f8fafc',
+                'fontSize': '14px',
+                'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+            }
+        });
+        mermaid.run({ querySelector: '.mermaid' });
+    });
+</script>
+
+</body>
+</html>

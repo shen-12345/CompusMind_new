@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“校事通”开发计划 — 技术选型与分阶段实施</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f7fb; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #1e293b; padding: 40px 20px; line-height: 1.7; }
+        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 50px 60px; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        h1 { font-size: 28px; font-weight: 700; border-bottom: 3px solid #2563eb; padding-bottom: 12px; margin-bottom: 8px; color: #0a1e3c; }
+        .subtitle { display: flex; gap: 30px; font-size: 14px; color: #64748b; margin-bottom: 32px; flex-wrap: wrap; }
+        .subtitle span { background: #f1f5f9; padding: 2px 14px; border-radius: 20px; }
+        h2 { font-size: 22px; font-weight: 600; margin-top: 40px; margin-bottom: 16px; color: #0a1e3c; padding-left: 14px; border-left: 4px solid #2563eb; }
+        h3 { font-size: 18px; font-weight: 600; margin-top: 28px; margin-bottom: 12px; color: #1e293b; }
+        h4 { font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 8px; color: #334155; }
+        p { margin-bottom: 14px; color: #334155; }
+        ul, ol { margin: 10px 0 16px 24px; color: #334155; }
+        li { margin-bottom: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        th { background: #f1f5f9; font-weight: 600; text-align: left; padding: 10px 14px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 10px 14px; border-bottom: 1px solid #eef2f6; vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        .highlight-box { background: #f8fafc; border-left: 4px solid #2563eb; padding: 16px 20px; border-radius: 6px; margin: 16px 0; }
+        .highlight-box.warning { border-left-color: #f59e0b; background: #fffbeb; }
+        .highlight-box.success { border-left-color: #10b981; background: #ecfdf5; }
+        .highlight-box.info { border-left-color: #06b6d4; background: #ecfeff; }
+        code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 13px; color: #0f172a; font-family: "SF Mono","Fira Code",monospace; }
+        .flow-chart { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 24px; font-family: "SF Mono","Fira Code",monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; margin: 16px 0 24px; white-space: pre-wrap; word-break: break-word; color: #0f172a; }
+        .tag { display: inline-block; background: #e0e7ff; color: #3730a3; font-size: 12px; padding: 1px 10px; border-radius: 12px; margin: 0 4px; }
+        .timeline { position: relative; padding: 0; margin: 24px 0; }
+        .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 3px; background: #e2e8f0; border-radius: 2px; }
+        .timeline-item { position: relative; padding-left: 50px; margin-bottom: 24px; }
+        .timeline-item::before { content: ''; position: absolute; left: 12px; top: 6px; width: 18px; height: 18px; border-radius: 50%; border: 3px solid #2563eb; background: #fff; }
+        .timeline-item.active::before { background: #2563eb; }
+        .timeline-item .phase-title { font-weight: 600; font-size: 16px; color: #0a1e3c; }
+        .timeline-item .phase-duration { font-size: 13px; color: #64748b; }
+        .footer-note { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #94a3b8; text-align: center; }
+        .arch-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 16px 0; font-family: "SF Mono","Fira Code",monospace; font-size: 13px; line-height: 1.8; white-space: pre-wrap; }
+        @media (max-width: 768px) { .container { padding: 20px 16px; } table { font-size: 13px; } th, td { padding: 6px 10px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>“校事通”开发计划</h1>
+    <div class="subtitle">
+        <span>📋 技术选型与分阶段实施</span>
+        <span>📅 2026年7月</span>
+        <span>🏷️ 技术栈：FastAPI + PostgreSQL + pgvector</span>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 技术架构总览 -->
+    <!-- ================================================================ -->
+    <h2>一、技术架构总览</h2>
+
+    <h3>1.1 最终技术栈</h3>
+    <table>
+        <thead><tr><th>层级</th><th>技术选型</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td><strong>前端框架</strong></td><td>Vue 3 + Element Plus</td><td>上手快、单文件组件开发效率高、Vite 开箱即用</td></tr>
+            <tr><td><strong>后端框架</strong></td><td>FastAPI (Python 3.11+)</td><td>异步支持好，自动生成 OpenAPI 文档</td></tr>
+            <tr><td><strong>关系数据库</strong></td><td>PostgreSQL 15+</td><td>支持 JSONB、全文检索、窗口函数</td></tr>
+            <tr><td><strong>向量数据库</strong></td><td>pgvector 扩展</td><td>PostgreSQL 内置，无需额外部署</td></tr>
+            <tr><td><strong>LLM 模型</strong></td><td>DeepSeek / 通义千问</td><td>中文能力强，API 成本低</td></tr>
+            <tr><td><strong>Embedding 模型</strong></td><td>text-embedding-v3 / bge-large</td><td>中文语义检索效果好</td></tr>
+            <tr><td><strong>文档解析</strong></td><td>PyMuPDF + python-docx + PaddleOCR</td><td>轻量，无 GPU 依赖（OCR 可选）</td></tr>
+            <tr><td><strong>文件存储</strong></td><td>本地文件系统（分层目录）</td><td>前期够用，后续可迁 MinIO</td></tr>
+            <tr><td><strong>密码加密</strong></td><td>bcrypt</td><td>行业标准</td></tr>
+            <tr><td><strong>反向代理</strong></td><td>Nginx</td><td>静态文件服务 + 转发</td></tr>
+        </tbody>
+    </table>
+
+    <div class="highlight-box success">
+        <strong>✅ 组件数：6 个</strong>（前端 / FastAPI / PostgreSQL / Nginx / LLM API / 文件系统）<br>
+        相比原方案减少了 Dify、Redis、MinIO、MinerU 四个组件，大幅降低部署和维护成本。
+    </div>
+
+    <h3>1.2 为什么用 pgvector 而不是单独部署向量数据库</h3>
+    <table>
+        <thead><tr><th>方案</th><th>优点</th><th>缺点</th></tr></thead>
+        <tbody>
+            <tr><td><strong>pgvector</strong></td><td>无需额外部署，数据与业务表在一起方便事务管理，备份简单</td><td>向量检索性能不如专用库（但对 10 万级 chunk 完全够用）</td></tr>
+            <tr><td><strong>单独 Qdrant/Milvus</strong></td><td>检索性能更强，支持更复杂的索引</td><td>多一个服务要部署维护，向量数据与业务数据分离</td></tr>
+        </tbody>
+    </table>
+    <p><strong>结论</strong>：单校园 MVP 阶段，政策文档数量有限（预估 250 个政策，约 5000-10000 个 chunk），pgvector 完全够用。</p>
+
+    <h3>1.3 文件存储目录结构</h3>
+    <div class="arch-box">
+uploads/
+├── policies/                         # 辅导员上传的政策文档
+│   └── {policy_id}/
+│       ├── original.pdf              # 源文件
+│       └── parsed.md                 # 解析后的 Markdown 文本
+│
+└── materials/                        # 学生上传的申请材料
+    └── {application_id}/
+        ├── {material_id}_申请表.pdf
+        ├── {material_id}_成绩单.pdf
+        └── ...
+    </div>
+
+    <h3>1.4 RAG 架构（自定义，无 Dify）</h3>
+    <div class="flow-chart">
+                ┌──────────────────────────────────────────────────┐
+                │               RAG Pipeline 架构                   │
+                └──────────────────────────────────────────────────┘
+
+【索引阶段（文档上传时异步执行）】
+文档 → PyMuPDF/python-docx 解析 → 纯文本
+    → 按段落/chunk_size=512 切片
+    → 调用 Embedding API → 向量 (1536维)
+    → 存入 pgvector (policy_chunks 表)
+
+【检索阶段（学生提问时实时执行）】
+学生问题 → Embedding API → 查询向量
+    → pgvector 余弦相似度检索 (Top-K=5)
+    → 同时元数据过滤 (学历+学院+年级)
+    → 返回相关原文段落
+
+【生成阶段（学生提问时实时执行）】
+检索结果 + 学生问题 → LLM API → 生成回答
+    → 回答中标注来源（政策名称+章节）
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 开发计划总览 -->
+    <!-- ================================================================ -->
+    <h2>二、开发计划总览</h2>
+
+    <p><strong>总周期</strong>：约 14 周（MVP 可交付）</p>
+    <p><strong>团队建议</strong>：2-3 人（1 后端 + 1 前端 + 1 顾问/测试）</p>
+
+    <div class="timeline">
+        <div class="timeline-item active">
+            <div class="phase-title">阶段 0：环境搭建</div>
+            <div class="phase-duration">第 1 周 · 1 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 1：用户认证与权限</div>
+            <div class="phase-duration">第 2 周 · 1 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 2：文档上传与 LLM 解析</div>
+            <div class="phase-duration">第 3-4 周 · 2 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 3：政策发布与学生看板</div>
+            <div class="phase-duration">第 5 周 · 1 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 4：学生申请与进度跟踪</div>
+            <div class="phase-duration">第 6-7 周 · 2 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 5：智能问答 Agent</div>
+            <div class="phase-duration">第 8-9 周 · 2 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 6：审核与审批系统</div>
+            <div class="phase-duration">第 10-11 周 · 2 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 7：看板与增强功能</div>
+            <div class="phase-duration">第 12 周 · 1 周</div>
+        </div>
+        <div class="timeline-item">
+            <div class="phase-title">阶段 8：测试与部署</div>
+            <div class="phase-duration">第 13-14 周 · 2 周</div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 阶段 0 -->
+    <!-- ================================================================ -->
+    <h2>三、各阶段详细任务</h2>
+
+    <h3>阶段 0：环境搭建与基础框架（第 1 周）</h3>
+    <p><strong>目标</strong>：所有基础设施就绪，能跑通 Hello World。</p>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>产出</th></tr></thead>
+        <tbody>
+            <tr><td>0.1</td><td>安装 PostgreSQL 15+，启用 pgvector 扩展</td><td>数据库可连接，vector 类型可用</td></tr>
+            <tr><td>0.2</td><td>创建 FastAPI 项目骨架（目录结构、配置管理、ORM 初始化）</td><td>项目可启动，/health 返回 {"status":"ok"}</td></tr>
+            <tr><td>0.3</td><td>创建 Vue 3 + Element Plus 项目骨架（Vite）</td><td>项目可启动，显示基础页面</td></tr>
+            <tr><td>0.4</td><td>配置 Nginx 反向代理（前后端联调）</td><td>前端请求可转发到后端 API</td></tr>
+            <tr><td>0.5</td><td>执行初始化 SQL 脚本，创建所有表结构</td><td>所有表创建成功</td></tr>
+            <tr><td>0.6</td><td>配置 LLM API 客户端（DeepSeek / 通义千问）</td><td>可成功调用 LLM API</td></tr>
+            <tr><td>0.7</td><td>配置 Embedding API 客户端</td><td>可成功调用 Embedding API</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：PostgreSQL 连接正常 | pgvector 类型可用 | FastAPI 返回 health check | 前端页面可访问 | LLM API 调用成功 | Embedding API 调用成功
+    </div>
+
+    <h3>阶段 1：用户认证与权限（第 2 周）</h3>
+    <p><strong>目标</strong>：三种角色可登录，权限隔离正确。</p>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>1.1</td><td>实现用户模型与数据库表</td><td>含 role, department, education_level, grade, admin_scope 等字段</td></tr>
+            <tr><td>1.2</td><td>实现超级管理员角色</td><td>可创建/禁用账号、配置系统参数、查看日志</td></tr>
+            <tr><td>1.3</td><td>实现学生账号批量导入（Excel/CSV）</td><td>支持批量导入学生信息，生成初始密码</td></tr>
+            <tr><td>1.4</td><td>实现登录/登出（JWT）</td><td>JWT Token，过期时间 24 小时</td></tr>
+            <tr><td>1.5</td><td>实现密码 bcrypt 加密</td><td>密码不以明文存储</td></tr>
+            <tr><td>1.6</td><td>实现角色权限控制（RBAC 中间件）</td><td>不同角色看到不同菜单和功能</td></tr>
+            <tr><td>1.7</td><td>实现首次登录强制修改密码</td><td>首次登录跳转至修改密码页</td></tr>
+            <tr><td>1.8</td><td>实现登录失败锁定（5次/15分钟）</td><td>数据库记录失败次数</td></tr>
+            <tr><td>1.9</td><td>实现 Session 超时自动退出</td><td>24 小时无操作 Token 过期</td></tr>
+            <tr><td>1.10</td><td>实现操作审计日志基础框架</td><td>所有关键操作记录日志（操作人、时间、IP、操作内容）</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：超级管理员可创建账号 | 批量导入学生成功 | 三种角色可登录 | 各角色权限隔离正确 | 首次登录强改密码 | 登录失败 5 次锁定 | 超时自动退出 | 审计日志记录正确
+    </div>
+
+    <h3>阶段 2：文档上传与 LLM 解析（第 3-4 周）</h3>
+    <p><strong>目标</strong>：辅导员上传文档 → 系统自动解析 → 结构化字段提取 → 向量化入库。</p>
+    <p><strong>核心设计</strong>：</p>
+    <div class="highlight-box info">
+        <strong>解析流程（异步双轨并行）</strong><br>
+        <strong>轨道一</strong>：文档 → PyMuPDF/python-docx → 纯文本 → LLM 提取结构化字段 → 存入 policy_metadata<br>
+        <strong>轨道二</strong>：文档 → 文本切片 → Embedding API → 向量 → 存入 pgvector<br>
+        <br>
+        <strong>切片策略</strong>：按逻辑段落切分，chunk_size=512 tokens，overlap=64 tokens<br>
+        <strong>提取字段</strong>：项目名称、截止时间、硬性门槛、互斥项、材料清单、评选流程、联系方式
+    </div>
+
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>2.1</td><td>实现文件上传 API（含格式/大小校验）</td><td>支持 PDF/Word，≤20MB，MIME 校验</td></tr>
+            <tr><td>2.2</td><td>实现本地文件存储（分层目录）</td><td>按 policies/{policy_id}/ 存储</td></tr>
+            <tr><td>2.3</td><td>集成 PyMuPDF 解析 PDF</td><td>提取全文文本</td></tr>
+            <tr><td>2.4</td><td>集成 python-docx 解析 Word</td><td>提取全文文本</td></tr>
+            <tr><td>2.5</td><td>实现文本切片模块</td><td>按段落/chunk_size 切片，保留元数据</td></tr>
+            <tr><td>2.6</td><td>实现 LLM 结构化字段提取</td><td>调用 DeepSeek/通义千问，按 JSON Schema 提取</td></tr>
+            <tr><td>2.7</td><td>实现 Embedding + pgvector 入库</td><td>调用 Embedding API，存入 policy_chunks 表</td></tr>
+            <tr><td>2.8</td><td>实现解析预览前端页面</td><td>展示提取字段，低置信度高亮，支持编辑</td></tr>
+            <tr><td>2.9</td><td>实现"保存草稿"功能</td><td>草稿态，学生端不可见</td></tr>
+            <tr><td>2.10</td><td>实现上传进度 + 异步解析状态提示</td><td>前端轮询解析状态</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box warning">
+        <strong>⚠️ 边界保障</strong>：LLM 提取失败 → 字段标记"未识别，请手动填写" | 向量化失败 → 禁止发布，事务回滚 | 重复文件 → MD5 检测
+    </div>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：上传 PDF/Word 成功 | 解析后提取字段正确 | 预览页可编辑 | 保存草稿成功 | 重复文件提示
+    </div>
+
+    <h3>阶段 3：政策发布与学生看板（第 5 周）</h3>
+    <p><strong>目标</strong>：导员可发布政策，学生可看到政策列表。</p>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>3.1</td><td>实现"确认发布"API</td><td>MySQL 写入 + 向量库写入 + 状态更新，事务一致性</td></tr>
+            <tr><td>3.2</td><td>实现版本管理（单版本生效）</td><td>同项目旧政策自动归档，发布时警告</td></tr>
+            <tr><td>3.3</td><td>实现"撤回发布"功能（30 分钟内）</td><td>撤回后恢复为草稿态</td></tr>
+            <tr><td>3.4</td><td>实现学生端政策看板（只读）</td><td>按学历+学院+年级过滤，按截止时间排序</td></tr>
+            <tr><td>3.5</td><td>实现政策详情页</td><td>展示政策全文、元数据、材料清单、倒计时</td></tr>
+            <tr><td>3.6</td><td>实现政策卡片颜色标识</td><td>正常（白）、即将截止（黄）、已截止（灰）</td></tr>
+            <tr><td>3.7</td><td>实现截止前分级提醒</td><td>截止前 3 天/1 天/6 小时，在政策卡片上标注</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：发布后学生端可见 | 同项目旧版自动归档 | 30 分钟内可撤回 | 看板按条件过滤正确 | 倒计时显示正确
+    </div>
+
+    <h3>阶段 4：学生申请与进度跟踪（第 6-7 周）</h3>
+    <p><strong>目标</strong>：学生可启动申请、上传材料、跟踪进度。</p>
+
+    <p><strong>状态流转（已确认，不可逆）</strong>：</p>
+    <div class="flow-chart">
+未开始 → 点击"开始准备"
+    → 准备中（逐项上传材料，可修改/删除）
+    → 点击"提交电子版"（系统校验：所有必填材料已上传？）
+    → 待初审（不可撤回，联系辅导员退回）
+    → 辅导员初审：
+        ├── 初审通过 → 学生可提交纸质版 → 点击"我已提交纸质版"
+        │   → 待终核 → 辅导员终核 → 已交校级待审批 → 校级审批 → ✅ 已完成
+        └── 需修正 → 学生修改 → 重新提交 → 待初审
+    </div>
+
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>4.1</td><td>实现"开始准备"API</td><td>创建 user_applications 记录，生成进度面板</td></tr>
+            <tr><td>4.2</td><td>实现材料清单展示</td><td>从政策元数据读取，每项材料对应独立上传入口</td></tr>
+            <tr><td>4.3</td><td>实现文件上传（PDF/JPG/PNG，≤5MB）</td><td>上传到 materials/{application_id}/ 目录</td></tr>
+            <tr><td>4.4</td><td>实现文件删除/替换</td><td>在"准备中"状态下可删除重新上传</td></tr>
+            <tr><td>4.5</td><td>实现"提交电子版"API</td><td>校验所有材料已上传 → 状态→"待初审"</td></tr>
+            <tr><td>4.6</td><td>实现"放弃申请"功能</td><td>状态→"已放弃"，释放唯一索引占用</td></tr>
+            <tr><td>4.7</td><td>实现状态机（严格校验流转合法性）</td><td>非法状态跳转被拒绝</td></tr>
+            <tr><td>4.8</td><td>实现进度可视化面板</td><td>进度条展示当前步骤</td></tr>
+            <tr><td>4.9</td><td>实现"我已提交纸质版"（含拍照上传）</td><td>学生拍照上传纸质版照片作为留痕凭证</td></tr>
+            <tr><td>4.10</td><td>实现申请时间线记录</td><td>每个操作写入 application_timeline</td></tr>
+            <tr><td>4.11</td><td>添加唯一约束（user_id, policy_id）</td><td>同一学生同一政策只能有一个申请</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：开始准备 → 上传材料 → 提交电子版 → 状态流转正确 | 可放弃申请 | 纸质版拍照上传成功 | 非法跳转被拒绝 | 时间线记录完整 | 重复申请被阻止
+    </div>
+
+    <h3>阶段 5：智能问答 Agent（第 8-9 周）</h3>
+    <p><strong>目标</strong>：学生可向 AI 提问政策相关问题，获得带来源标注的回答。</p>
+
+    <p><strong>RAG Pipeline 实现</strong>：</p>
+    <div class="flow-chart">
+学生提问 → Embedding API → 向量化
+    → pgvector 相似度检索（Top-K=5，含元数据过滤）
+    → 检索结果 + 系统提示词 + 学生问题 → LLM API
+    → 生成回答（含来源标注）
+    → 展示给用户
+    </div>
+
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>5.1</td><td>实现 RAG 检索服务</td><td>pgvector 查询 + 元数据过滤 + 结果排序</td></tr>
+            <tr><td>5.2</td><td>实现 Agent 工具集（5 个工具）</td><td>截止时间查询、材料清单检索、政策原文摘录、申请状态查询、收藏管理</td></tr>
+            <tr><td>5.3</td><td>实现 LLM 调用封装（含重试/降级）</td><td>重试 3 次，降级为关键词检索</td></tr>
+            <tr><td>5.4</td><td>实现对话上下文管理</td><td>保留最近 5 轮对话，超 10 轮压缩上下文</td></tr>
+            <tr><td>5.5</td><td>实现来源标注</td><td>回答中标注政策名称 + 章节</td></tr>
+            <tr><td>5.6</td><td>实现 Agent 对话 UI</td><td>右下角悬浮对话框，Ctrl+K 唤起</td></tr>
+            <tr><td>5.7</td><td>实现"有帮助/没帮助"反馈</td><td>反馈数据入库</td></tr>
+            <tr><td>5.8</td><td>实现"加入进度跟踪"引导</td><td>回答材料问题后主动引导</td></tr>
+            <tr><td>5.9</td><td>实现限流（单用户每分钟 ≤20 次）</td><td>内存计数，后续可迁 Redis</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box warning">
+        <strong>⚠️ 边界保障</strong>：LLM 不可用 → 降级为关键词检索 | 检索无结果 → 引导联系辅导员 | 工具调用超时 → 兜底话术 | 敏感词过滤
+    </div>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：RAG 检索准确 | 工具调用正常 | 来源标注正确 | 降级机制生效 | 反馈可统计
+    </div>
+
+    <h3>阶段 6：审核与审批系统（第 10-11 周）</h3>
+    <p><strong>目标</strong>：辅导员可初审/终核，校级管理员可审批。</p>
+    <p><strong>关键设计</strong>：</p>
+    <ul>
+        <li>提交申请时绑定辅导员ID（根据学院自动匹配）</li>
+        <li>每位辅导员只能看到自己学院学生的申请</li>
+        <li>校级管理员按项目指定，唯一管理员</li>
+        <li>所有审核操作记录到时间线</li>
+    </ul>
+
+    <h4>第 10 周：辅导员初审</h4>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>6.1</td><td>实现待初审项目分类视图</td><td>按项目分类展示待审数量</td></tr>
+            <tr><td>6.2</td><td>实现项目下学生申请列表</td><td>展示学生姓名、学号、提交时间、等待时长</td></tr>
+            <tr><td>6.3</td><td>实现材料在线预览（vue-pdf-embed）</td><td>浏览器内预览 PDF/图片，支持下载</td></tr>
+            <tr><td>6.4</td><td>实现"初审通过"API</td><td>状态→"初审通过"，通知学生（站内+邮件）</td></tr>
+            <tr><td>6.5</td><td>实现"需修正"API（含意见填写）</td><td>强制填写意见，状态→"需修正"</td></tr>
+            <tr><td>6.6</td><td>实现"撤销初审"（30 分钟内）</td><td>撤销后恢复为"待初审"</td></tr>
+            <tr><td>6.7</td><td>实现辅导员委托代理机制</td><td>辅导员可指定临时替代人，审核权限转移</td></tr>
+            <tr><td>6.8</td><td>实现超时提醒（初审超过 7 天未处理）</td><td>定时任务检查，提醒辅导员</td></tr>
+        </tbody>
+    </table>
+
+    <h4>第 11 周：辅导员终核 + 校级审批</h4>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>6.9</td><td>实现待终核列表</td><td>展示已提交纸质版的申请（含拍照凭证预览）</td></tr>
+            <tr><td>6.10</td><td>实现终核核验清单 UI</td><td>材料齐全性、签章完备性、内容一致性，逐项勾选</td></tr>
+            <tr><td>6.11</td><td>实现"终核通过"API</td><td>所有核验项勾选后才可提交，状态→"已交校级待审批"</td></tr>
+            <tr><td>6.12</td><td>实现终核退回（注明原因）</td><td>状态→"需修正"</td></tr>
+            <tr><td>6.13</td><td>实现校级待审批列表（项目→学院两级）</td><td>按项目分类，项目下按学院分组</td></tr>
+            <tr><td>6.14</td><td>实现校级"审批通过"</td><td>状态→"已完成"</td></tr>
+            <tr><td>6.15</td><td>实现校级"审批驳回"（含理由）</td><td>状态→"需修正"</td></tr>
+            <tr><td>6.16</td><td>实现校级"退回至辅导员"</td><td>发现辅导员终核遗漏时退回</td></tr>
+            <tr><td>6.17</td><td>实现通知触发（所有审核节点）</td><td>每个状态变更触发站内通知 + 邮件通知</td></tr>
+            <tr><td>6.18</td><td>实现邮件发送服务</td><td>对接 SMTP 服务，发送审核结果通知</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：辅导员初审通过/退回 | 终核核验清单 | 校级审批通过/驳回 | 委托代理生效 | 邮件通知发送成功 | 通知触发 | 超时提醒 | 流转记录完整
+    </div>
+
+    <h3>阶段 7：看板与增强功能（第 12 周）</h3>
+    <p><strong>目标</strong>：数据统计看板、收藏、通知中心。</p>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>7.1</td><td>实现辅导员数据统计看板</td><td>7 项漏斗指标，支持按时间范围筛选</td></tr>
+            <tr><td>7.2</td><td>实现统计看板图表展示</td><td>漏斗图 + 趋势图</td></tr>
+            <tr><td>7.3</td><td>实现数据导出（Excel）</td><td>申请记录、统计数据导出为 Excel</td></tr>
+            <tr><td>7.4</td><td>实现政策收藏（含标签功能）</td><td>收藏/取消收藏，可选标签</td></tr>
+            <tr><td>7.5</td><td>实现收藏列表</td><td>展示已收藏政策，标记状态变化</td></tr>
+            <tr><td>7.6</td><td>实现通知中心</td><td>铃铛图标、未读数量、点击跳转</td></tr>
+            <tr><td>7.7</td><td>实现全局搜索（基本关键词）</td><td>搜索政策标题+全文，结果高亮</td></tr>
+            <tr><td>7.8</td><td>实现敏感信息加密存储</td><td>身份证号、家庭信息等 AES-256 加密</td></tr>
+            <tr><td>7.9</td><td>实现文件访问临时签名</td><td>文件 URL 有效期 5 分钟，防止越权</td></tr>
+            <tr><td>7.10</td><td>边界场景加固</td><td>毕业后账号失效、状态自动修复等</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：统计看板数据正确 | 数据导出 Excel 可用 | 收藏功能完整 | 通知中心正常 | 全局搜索可用 | 敏感信息加密存储 | 文件访问权限控制正常
+    </div>
+
+    <h3>阶段 8：测试与部署（第 13-14 周）</h3>
+    <p><strong>目标</strong>：系统稳定上线，核心用户旅程通过验证。</p>
+    <table>
+        <thead><tr><th>序号</th><th>任务</th><th>说明</th></tr></thead>
+        <tbody>
+            <tr><td>8.1</td><td>编写单元测试（核心模块）</td><td>覆盖率 ≥ 70%</td></tr>
+            <tr><td>8.2</td><td>编写 API 集成测试</td><td>所有接口测试通过</td></tr>
+            <tr><td>8.3</td><td>编写 E2E 测试（5 条核心旅程）</td><td>Playwright</td></tr>
+            <tr><td>8.4</td><td>执行性能测试</td><td>看板 &lt; 2s，Agent &lt; 3s（含 LLM）</td></tr>
+            <tr><td>8.5</td><td>执行安全测试</td><td>SQL注入/XSS/权限越权/加密校验/文件访问控制 无高风险</td></tr>
+            <tr><td>8.6</td><td>AI 问答质量评估</td><td>准确率 ≥ 90%</td></tr>
+            <tr><td>8.7</td><td>部署到测试环境</td><td>内部用户可访问</td></tr>
+            <tr><td>8.8</td><td>用户验收测试（UAT）</td><td>≥ 3 位导员 + 10 位学生 + 2 位管理员</td></tr>
+            <tr><td>8.9</td><td>生产环境部署</td><td>正式上线</td></tr>
+        </tbody>
+    </table>
+    <div class="highlight-box success">
+        <strong>✅ 验收标准</strong>：单元测试通过 | E2E 测试通过 | 性能达标 | 安全扫描通过 | UAT 通过 | 生产环境可用
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- 依赖关系与并行策略 -->
+    <!-- ================================================================ -->
+    <h2>四、依赖关系与并行策略</h2>
+
+    <h3>4.1 阶段依赖图</h3>
+    <div class="flow-chart">
+阶段 0（环境搭建）
+    ↓
+阶段 1（用户认证） ← 阶段 0 完成后即可开始
+    ↓
+阶段 2（文档上传解析） ← 阶段 1 完成后（需要登录权限）
+    ↓
+阶段 3（政策发布&看板） ← 阶段 2 完成后（需要解析功能）
+    ↓
+阶段 4（申请进度跟踪） ← 阶段 3 完成后（需要政策可见）
+    │
+    ├──→ 阶段 5（智能问答） ← 阶段 3 完成后（需要政策数据），可与阶段 4 并行
+    │
+    └──→ 阶段 6（审核审批） ← 阶段 4 完成后（需要申请功能）
+            ↓
+        阶段 7（看板&增强） ← 阶段 6 完成后（需要审核数据）
+            ↓
+        阶段 8（测试&部署） ← 所有阶段完成后
+    </div>
+
+    <h3>4.2 并行建议</h3>
+    <table>
+        <thead><tr><th>时间段</th><th>后端任务</th><th>前端任务</th></tr></thead>
+        <tbody>
+            <tr><td>第 1-2 周</td><td>阶段 0 + 阶段 1（API）</td><td>阶段 0（项目搭建）+ 阶段 1（登录页）</td></tr>
+            <tr><td>第 3-4 周</td><td>阶段 2（解析服务）</td><td>阶段 2（上传页 + 预览页）</td></tr>
+            <tr><td>第 5 周</td><td>阶段 3（发布API + 看板API）</td><td>阶段 3（看板页 + 详情页）</td></tr>
+            <tr><td>第 6-7 周</td><td>阶段 4（申请API + 状态机）</td><td>阶段 4（进度面板 + 上传组件）</td></tr>
+            <tr><td>第 8-9 周</td><td>阶段 5（RAG服务）</td><td>阶段 5（对话UI）</td></tr>
+            <tr><td>第 10-11 周</td><td>阶段 6（审核API）</td><td>阶段 6（审核页 + 审批页）</td></tr>
+            <tr><td>第 12 周</td><td>阶段 7（看板数据 + 搜索API）</td><td>阶段 7（统计图表 + 通知中心）</td></tr>
+            <tr><td>第 13-14 周</td><td>阶段 8（测试 + 部署）</td><td>阶段 8（测试 + 修复）</td></tr>
+        </tbody>
+    </table>
+
+    <h3>4.3 关键设计决策</h3>
+    <table>
+        <thead><tr><th>决策点</th><th>方案</th><th>理由</th></tr></thead>
+        <tbody>
+            <tr><td>提交申请时绑定辅导员</td><td>根据学生学院自动匹配辅导员</td><td>每个学院导员固定，无需手动指定</td></tr>
+            <tr><td>辅导员角色临时替代</td><td>支持代理委托机制，辅导员可指定临时替代人</td><td>请假/出差时审核不中断</td></tr>
+            <tr><td>双学位学生</td><td>以主学院为准进行政策过滤</td><td>避免重复计算和混淆</td></tr>
+            <tr><td>毕业后账号处理</td><td>账号置为失效，进行中的申请标记为"已失效"</td><td>数据保留但不可操作</td></tr>
+            <tr><td>政策跨学年更新</td><td>导员上传新版覆盖旧版，旧版自动归档</td><td>不自动清理，由导员控制</td></tr>
+            <tr><td>数据导出</td><td>支持导出为 Excel</td><td>学校存档和审计需要</td></tr>
+            <tr><td>CAS/教务对接</td><td>MVP 不做，用虚拟数据模拟</td><td>后续稳定后接入</td></tr>
+            <tr><td>邮件通知</td><td>辅助站内通知，审核结果通过邮件发送</td><td>提高触达率</td></tr>
+            <tr><td>学生主动放弃</td><td>提供"放弃申请"功能，状态变为"已放弃"</td><td>避免状态卡死</td></tr>
+            <tr><td>纸质版提交留痕</td><td>学生提交纸质版时拍照上传作为凭证</td><td>避免"已提交/未收到"纠纷</td></tr>
+            <tr><td>修改次数限制</td><td>不做限制</td><td>避免过度约束</td></tr>
+            <tr><td>同一学生同一政策限制</td><td>唯一索引 (user_id, policy_id)</td><td>防止重复申请，提交前可修改</td></tr>
+            <tr><td>状态流转</td><td>严格状态机，非法跳转被拒绝</td><td>防止数据异常</td></tr>
+            <tr><td>批量审核</td><td>不实现</td><td>材料需人工逐份审核</td></tr>
+            <tr><td>通知超时升级</td><td>仅提醒辅导员，不升级至校级</td><td>避免过度干预</td></tr>
+            <tr><td>文件存储</td><td>本地文件系统 + 分层目录</td><td>MVP 够用，后续可迁</td></tr>
+            <tr><td>向量检索</td><td>pgvector，MVP 先用，后续可换</td><td>数据量小够用，迁移成本低</td></tr>
+            <tr><td>PDF 预览</td><td>vue-pdf-embed</td><td>Vue 3 原生封装，开箱即用</td></tr>
+            <tr><td>Agent 降级</td><td>LLM 不可用 → 关键词检索</td><td>保证基本可用性</td></tr>
+            <tr><td>对话上下文压缩</td><td>超 10 轮时提取关键信息压缩</td><td>不丢弃，保留有效信息</td></tr>
+            <tr><td>敏感信息加密</td><td>身份证号、家庭信息等 AES-256 加密存储</td><td>数据安全合规</td></tr>
+            <tr><td>文件访问权限</td><td>文件 URL 使用临时签名，有效期 5 分钟</td><td>防止越权访问</td></tr>
+            <tr><td>操作日志</td><td>所有关键操作记录审计日志，不可删除</td><td>追溯和纠纷处理</td></tr>
+            <tr><td>移动端</td><td>MVP 仅 PC 网页端，后续迭代迁移</td><td>聚焦核心功能</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================================================================ -->
+    <!-- 风险评估 -->
+    <!-- ================================================================ -->
+    <h2>五、风险评估</h2>
+    <table>
+        <thead><tr><th>风险</th><th>概率</th><th>影响</th><th>应对策略</th></tr></thead>
+        <tbody>
+            <tr><td>LLM API 不稳定/延迟高</td><td>中</td><td>高</td><td>多模型切换（DeepSeek/通义千问互备），超时降级</td></tr>
+            <tr><td>pgvector 检索性能不足</td><td>低</td><td>中</td><td>chunk 数量预期 < 1 万，完全够用；如不够加 IVFFlat 索引</td></tr>
+            <tr><td>本地文件系统空间不足</td><td>低</td><td>中</td><td>监控磁盘使用率，>80% 预警，可随时迁移到 MinIO</td></tr>
+            <tr><td>前端开发资源不足</td><td>中</td><td>高</td><td>优先使用 Element Plus 模板，减少定制开发</td></tr>
+            <tr><td>用户需求在开发过程中变更</td><td>高</td><td>中</td><td>每阶段结束有验收标准，变更进入下一阶段</td></tr>
+            <tr><td>PostgreSQL JSONB 字段设计不合理</td><td>低</td><td>低</td><td>JSONB 灵活，可随时调整字段结构</td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer-note">
+        <p>本开发计划基于 2026 年 7 月技术选型讨论结果制定。</p>
+        <p style="margin-top:4px; font-size:13px; color:#94a3b8;">—— 计划结束 ——</p>
+    </div>
+
+</div>
+</body>
+</html>
