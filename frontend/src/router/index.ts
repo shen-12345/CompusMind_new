@@ -119,7 +119,7 @@ const router = createRouter({
         {
           path: 'student/applications',
           name: 'StudentApplications',
-          component: () => import('../views/PlaceholderView.vue'),
+          component: () => import('../views/student/ApplicationsView.vue'),
           meta: { roles: ['student'] },
         },
         {

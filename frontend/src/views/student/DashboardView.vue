@@ -44,6 +44,13 @@
             <span v-else>⏰ 截止时间未设置</span>
           </div>
           <el-button text type="primary" size="small">查看详情 →</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click.stop="handleStart(item)"
+          >
+            开始准备
+          </el-button>
         </div>
       </div>
     </div>
@@ -104,12 +111,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getStudentPolicies } from '../../api/student'
 import { getPolicyDetail } from '../../api/policy'
+import { startApplication } from '../../api/application'
 import { useAuthStore } from '../../stores/auth'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const userName = computed(() => authStore.user?.name || '同学')
 
 const policies = ref<any[]>([])
@@ -173,6 +183,20 @@ async function openDetail(item: any) {
     }
   } catch {
     ElMessage.error('加载详情失败')
+  }
+}
+
+async function handleStart(item: any) {
+  try {
+    const res = await startApplication(item.policy_id)
+    if (res.code === 0) {
+      ElMessage.success('已开始准备，请上传材料')
+      router.push('/student/applications')
+    } else {
+      ElMessage.warning(res.message || '操作失败')
+    }
+  } catch (err: any) {
+    ElMessage.warning(err.response?.data?.message || '操作失败')
   }
 }
 

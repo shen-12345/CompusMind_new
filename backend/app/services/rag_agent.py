@@ -39,10 +39,45 @@ class RAGAgent:
         }
 
     async def _retrieve(self, question: str, top_k: int = 5) -> list[dict]:
-        """检索相关段落（关键词检索）"""
-        return await self._keyword_search(question, top_k)
+        """检索相关段落（语义检索 + 关键词降级）"""
+        try:
+            query_vector = await self.embedding.embed_text(question)
+            vector_str = "[" + ",".join(str(v) for v in query_vector) + "]"
 
-        # 2. 降级：关键词检索
+            sql = text("""
+                SELECT pc.chunk_id, pc.chunk_content, pc.chunk_title,
+                       pc.policy_id, p.title as policy_title,
+                       1 - (pc.embedding <=> CAST(:query_vec AS vector)) as similarity
+                FROM policy_chunks pc
+                JOIN policies p ON pc.policy_id = p.policy_id
+                WHERE p.status = 'published'
+                  AND (p.department = :dept OR p.department = '全校')
+                  AND (p.education_level = :edu OR p.education_level = '全校')
+                  AND pc.embedding IS NOT NULL
+                ORDER BY pc.embedding <=> CAST(:query_vec AS vector)
+                LIMIT :limit
+            """)
+            result = await self.db.execute(sql, {
+                "query_vec": vector_str, "dept": self.student.department,
+                "edu": self.student.education_level or "本科", "limit": top_k,
+            })
+            rows = result.all()
+            semantic_results = []
+            for r in rows:
+                sim = float(r[5]) if r[5] else 0
+                if sim > 0.3:
+                    semantic_results.append({
+                        "chunk_id": r[0], "content": r[1],
+                        "title": r[2] or "", "policy_id": r[3],
+                        "policy_title": r[4], "similarity": sim,
+                    })
+            if semantic_results:
+                return semantic_results
+        except Exception as e:
+            print(f"[Vector Search Error] {e}")
+            await self.db.rollback()
+
+        # 降级：关键词检索
         return await self._keyword_search(question, top_k)
 
     async def _keyword_search(self, question: str, top_k: int = 5) -> list[dict]:
@@ -83,8 +118,9 @@ class RAGAgent:
             return "未找到相关文档。"
 
         context_parts = []
-        for c in chunks:
-            source = f"[来源: {c['policy_title']}]"
+        for i, c in enumerate(chunks):
+            section = f" ({c['title']})" if c['title'] else ""
+            source = f"[来源: 《{c['policy_title']}》{section}]"
             context_parts.append(f"{c['content']}\n{source}")
 
         return "\n\n---\n\n".join(context_parts)
@@ -95,11 +131,14 @@ class RAGAgent:
         sources = []
         for c in chunks:
             pid = c["policy_id"]
-            if pid not in seen:
-                seen.add(pid)
+            key = f"{pid}-{c.get('title', '')}"
+            if key not in seen:
+                seen.add(key)
+                section = f" ({c['title']})" if c['title'] else ""
                 sources.append({
                     "policy_id": pid,
                     "title": c["policy_title"],
+                    "section": section.strip(" ()") if c.get('title') else None,
                 })
         return sources
 
@@ -161,7 +200,8 @@ class RAGAgent:
         return f"""你是一个校园政策问答助手，帮助{self.student.department}的学生解答问题。
 
 规则：
-1. 当有相关资料时，优先基于资料回答，并标注来源（政策名称）
-2. 当没有相关资料时，如果是政策相关问题，诚实告知"未找到相关信息，建议联系辅导员确认"
-3. 如果是非政策问题（如问候、闲聊、自我介绍等），正常回答即可
-4. 用中文回答，简洁清晰"""
+1. 当有相关资料时，优先基于资料回答，并标注具体来源（政策名称 + 章节/段落）
+2. 标注格式：引用处标注「来源：政策名称 - 章节名」
+3. 当没有相关资料时，如果是政策相关问题，诚实告知"未找到相关信息，建议联系辅导员确认"
+4. 如果是非政策问题（如问候、闲聊、自我介绍等），正常回答即可
+5. 用中文回答，简洁清晰"""

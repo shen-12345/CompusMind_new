@@ -56,7 +56,7 @@ class PolicyChunk(Base):
     chunk_content = Column(Text, nullable=False)
     chunk_index = Column(Integer, nullable=False)
     chunk_title = Column(String(200), nullable=True)  # 段落标题（如章节名）
-    embedding = Column(Vector(384), nullable=True)  # 向量嵌入（bge-small-zh 384维）
+    embedding = Column(Vector(1024), nullable=True)  # 向量嵌入（通义千问 1024维）
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):

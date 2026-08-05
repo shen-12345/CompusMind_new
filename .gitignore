@@ -27,8 +27,11 @@ Thumbs.db
 frontend/dist/
 backend/build/
 
-# 测试PDF
+# 测试和临时文件
 backend/test_policy*.pdf
 backend/user_test*.pdf
 backend/new_test*.pdf
 backend/scholarship.pdf
+backend/test_en.pdf
+backend/login_resp.json
+backend/token.txt

@@ -140,7 +140,7 @@ const menuItems = computed(() => {
         { path: '/student/dashboard', label: '信息看板', icon: 'HomeFilled' },
         { path: '/student/favorites', label: '我的关注', icon: 'Star' },
         { path: '/student/applications', label: '我的申请', icon: 'List' },
-        { path: '/student/qa', label: '智能问答', icon: 'ChatDotSquare' },
+        { path: '/student/applications', label: '我的申请', icon: 'List' },
       ],
     },
   ]
